@@ -1,4 +1,31 @@
-﻿<!DOCTYPE html>
+﻿<?php
+session_start(); // Start session at the beginning of the script
+// Include the CRUD operations script
+include '../../../dashboard/crud_operation.php';
+
+// Handle form submission for sign-in
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['signin'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $user = validateUser($username, $password);
+    if ($user) {
+        $_SESSION['user_id'] = $user['user_id'];
+        $_SESSION['username'] = $user['username'];
+        header('Location: ../../../dashboard/users');
+        exit;
+    } else {
+        $_SESSION['message'] = "Invalid username or password."; // Set session message
+        header('Location: /'); // Redirect to the same page
+        exit;
+    }
+}
+
+// Retrieve message if set
+$message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
+unset($_SESSION['message']);
+
+?>
+<!DOCTYPE html>
 <html lang="en-US" dir="ltr" data-navigation-type="default" data-navbar-horizontal-shape="default">
 
   <head>
@@ -89,14 +116,15 @@
                         <p class="text-body-tertiary">Get access to your account</p>
                       </div><button class="btn btn-phoenix-secondary w-100 mb-3"><span class="fab fa-google text-danger me-2 fs-9"></span>Sign in with google</button><button class="btn btn-phoenix-secondary w-100"><span class="fab fa-facebook text-primary me-2 fs-9"></span>Sign in with facebook</button>
                       <div class="position-relative">
-                        <hr class="bg-body-secondary mt-5 mb-4">
-                        <div class="divider-content-center bg-body-emphasis">or use email</div>
+                          <?php if ($message): ?>
+                              <p class="message"><?php echo htmlspecialchars($message); ?></p>
+                          <?php endif; ?>
                       </div>
                       <div class="mb-3 text-start"><label class="form-label" for="email">Email address</label>
-                        <div class="form-icon-container"><input class="form-control form-icon-input" id="email" type="email" placeholder="name@example.com"><span class="fas fa-user text-body fs-9 form-icon"></span></div>
+                        <div class="form-icon-container"><input class="form-control form-icon-input" id="email" type="email" placeholder="name@example.com" name="username"><span class="fas fa-user text-body fs-9 form-icon"></span></div>
                       </div>
                       <div class="mb-3 text-start"><label class="form-label" for="password">Password</label>
-                        <div class="form-icon-container" data-password="data-password"><input class="form-control form-icon-input pe-6" id="password" type="password" placeholder="Password" data-password-input="data-password-input"><span class="fas fa-key text-body fs-9 form-icon"></span><button class="btn px-3 py-0 h-100 position-absolute top-0 end-0 fs-7 text-body-tertiary" data-password-toggle="data-password-toggle"><span class="uil uil-eye show"></span><span class="uil uil-eye-slash hide"></span></button></div>
+                        <div class="form-icon-container" data-password="data-password"><input class="form-control form-icon-input pe-6" id="password" type="password" placeholder="Password" data-password-input="data-password-input" name="password"><span class="fas fa-key text-body fs-9 form-icon"></span><button class="btn px-3 py-0 h-100 position-absolute top-0 end-0 fs-7 text-body-tertiary" data-password-toggle="data-password-toggle"><span class="uil uil-eye show"></span><span class="uil uil-eye-slash hide"></span></button></div>
                       </div>
                       <div class="row flex-between-center mb-7">
                         <div class="col-auto">
