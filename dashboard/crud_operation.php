@@ -1,8 +1,8 @@
 <?php
 // Database connection
 $servername = "localhost";
-$username = "root";
-$password = "johnson.5";
+$username = "investimate";
+$password = "Admin.4****";
 $dbname = "investmate_admin";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -57,9 +57,9 @@ function readFileContent($fileName) {
 }
 
 
-function createBlogPost($title, $caption, $content, $category, $tags, $file, $user_id) {
+function createBlogPost($title, $caption, $category, $content, $tags, $file, $user_id) {
     global $conn;
-    
+
     // Handle file upload if a file is provided
     $fileUrl = null;
     if (!empty($file['name'])) {
@@ -67,13 +67,25 @@ function createBlogPost($title, $caption, $content, $category, $tags, $file, $us
         $fileUrl = getFileUrl($fileName);
     }
 
-    // Insert post into the database
+    // Prepare the SQL statement
     $stmt = $conn->prepare("INSERT INTO posts (title, caption, content, category, tags, featured_image_url, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssi", $title, $caption, $category, $tags, $fileUrl, $user_id);
-    $stmt->execute();
+
+    // Check if the statement was prepared successfully
+    if ($stmt === false) {
+        die('Prepare failed: ' . htmlspecialchars($conn->error));
+    }
+
+    // Bind the parameters
+    $stmt->bind_param("ssssssi", $title,$caption, $content, $category, $tags, $fileUrl, $user_id);
+
+    // Execute the statement
+    if (!$stmt->execute()) {
+        die('Execute failed: ' . htmlspecialchars($stmt->error));
+    }
+
+    // Close the statement
     $stmt->close();
 }
-
 
 // List Posts
 function listPosts() {
@@ -160,7 +172,48 @@ function deleteUser($user_id) {
     $stmt->execute();
     $stmt->close();
 }
+// Get the count of Posts
+function getPostCount() {
+    global $conn;
+    $stmt = $conn->prepare("SELECT COUNT(*) AS count FROM Posts");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $count = $result->fetch_assoc()['count'];
+    $stmt->close();
+    return $count;
+}
 
+// Get the count of Users
+function getUserCount() {
+    global $conn;
+    $stmt = $conn->prepare("SELECT COUNT(*) AS count FROM Users");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $count = $result->fetch_assoc()['count'];
+    $stmt->close();
+    return $count;
+}
+function getPostById($post_id) {
+    global $conn;
+
+    // Prepare the SQL statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM Posts WHERE post_id = ?");
+    $stmt->bind_param("i", $post_id);
+
+    // Execute the statement
+    $stmt->execute();
+
+    // Get the result
+    $result = $stmt->get_result();
+
+    // Fetch the post data
+    $post = $result->fetch_assoc();
+
+    // Close the statement
+    $stmt->close();
+
+    return $post;
+}
 // Close connection
 function closeConnection() {
     global $conn;
