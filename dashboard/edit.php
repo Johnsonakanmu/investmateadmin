@@ -1,24 +1,9 @@
-﻿<?php
+<?php
+// Include the CRUD operations script
 include 'crud_operation.php';
 
-// Handle deletion of a blog post
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
-  $post_id = $_POST['post_id'];
 
-  try {
-      deletePost($post_id);
-      echo "Blog post deleted successfully.";
-  } catch (Exception $e) {
-      echo "Error: " . $e->getMessage();
-  }
-}
-
-// Fetch the list of posts
-$posts = listPosts();
-// $posts = updatePost();
-
-
-
+$post = updatePost();
 ?>
 
 <!DOCTYPE html>
@@ -46,10 +31,12 @@ $posts = listPosts();
     <meta name="theme-color" content="#ffffff">
     <script src="../vendors/simplebar/simplebar.min-1.js"></script>
     <script src="../assets/js/config-1.js"></script>
-
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
+    <link href="../vendors/choices/choices.min.css" rel="stylesheet">
+    <link href="../vendors/dhtmlx-gantt/dhtmlxgantt.css" rel="stylesheet">
+    <link href="../vendors/flatpickr/flatpickr.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="../../../css2-1?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
@@ -74,6 +61,8 @@ $posts = listPosts();
         userLinkRTL.setAttribute('disabled', true);
       }
     </script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+
   </head>
 
   <body>
@@ -91,31 +80,27 @@ $posts = listPosts();
                 <div class="nav-item-wrapper">
                   <div class="parent-wrapper label-1">
                     <ul class="nav collapse parent show" data-bs-parent="#navbarVerticalCollapse" id="nv-home">
-                   
                     <li class="nav-item"><a class="nav-link" href="user.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
                       <li class="nav-item"><a class="nav-link" href="add_new.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
-                        </a>
+                        </a><!-- more inner pages-->
                       </li>
-                      <li class="nav-item"><a class="nav-link active" href="blog_list.php">
+                      <li class="nav-item"><a class="nav-link" href="blog_list.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
-                        </a>
+                        </a><!-- more inner pages-->
                       </li>
-                      <!-- <li class="nav-item"><a class="nav-link" href="edit.php">
+                      <!-- <li class="nav-item"><a class="nav-link active" href="edit.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Edit</span></div>
                         </a>
                       </li> -->
-                      
                     </ul>
                   </div>
                 </div>
               </li>
-              <li class="nav-item">
-                <!-- label-->
-              
+               
             </ul>
           </div>
         </div>
@@ -125,7 +110,7 @@ $posts = listPosts();
         <div class="collapse navbar-collapse justify-content-between">
           <div class="navbar-logo">
             <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
-            <a class="navbar-brand me-1 me-sm-3" href="#">
+            <a class="navbar-brand me-1 me-sm-3" href="../index-1.html">
               <div class="d-flex align-items-center">
                 <div class="d-flex align-items-center"><img src="../assets/img/icons/logo-1.png" alt="phoenix" width="27">
                   <h5 class="logo-text ms-2 d-none d-sm-block">Investmate</h5>
@@ -135,7 +120,7 @@ $posts = listPosts();
           </div>
           <div class="search-box navbar-top-search-box d-none d-lg-block" data-list='{"valueNames":["title"]}' style="width:25rem;">
             <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
-              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm"  type="search" placeholder="Search..." aria-label="Search">
+              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" type="search" placeholder="Search..." aria-label="Search">
               <span class="fas fa-search search-box-icon"></span>
             </form>
             <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search"><button class="btn btn-link p-0" aria-label="Close"></button></div>
@@ -145,12 +130,12 @@ $posts = listPosts();
                   <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">results</span></h6>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Recently Searched </h6>
-                  <div class="py-2"><a class="dropdown-item" href="#">
+                  <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
                       </div>
@@ -158,14 +143,14 @@ $posts = listPosts();
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Products</h6>
-                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="">
+                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../apps/e-commerce/landing/product-details.html">
                       <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../assets/img/products/60x60/3-1.png" alt=""></div>
                       <div class="flex-1">
                         <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
                         <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
                       </div>
                     </a>
-                    <a class="dropdown-item py-2 d-flex align-items-center" href="">
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="../apps/e-commerce/landing/product-details.html">
                       <div class="file-thumbnail me-2"><img class="img-fluid" src="../assets/img/products/60x60/3-1.png" alt=""></div>
                       <div class="flex-1">
                         <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
@@ -175,12 +160,12 @@ $posts = listPosts();
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Quick Links</h6>
-                  <div class="py-2"><a class="dropdown-item" href="#">
+                  <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Support MacBook House</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                       </div>
@@ -188,17 +173,17 @@ $posts = listPosts();
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Files</h6>
-                  <div class="py-2"><a class="dropdown-item" href="#">
+                  <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-file-zipper text-body" data-fa-transform="shrink-2"></span> Library MacBook folder.rar</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-file-lines text-body" data-fa-transform="shrink-2"></span> Feature MacBook extensions.txt</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-image text-body" data-fa-transform="shrink-2"></span> MacBook Pro_13.jpg</div>
                       </div>
@@ -206,7 +191,7 @@ $posts = listPosts();
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Members</h6>
-                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../pages/members.html">
                       <div class="avatar avatar-l status-online  me-2 text-body">
                         <img class="rounded-circle " src="../assets/img/team/40x40/10-1.webp" alt="">
                       </div>
@@ -215,7 +200,7 @@ $posts = listPosts();
                         <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
                       </div>
                     </a>
-                    <a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="../pages/members.html">
                       <div class="avatar avatar-l  me-2 text-body">
                         <img class="rounded-circle " src="../assets/img/team/40x40/12-1.webp" alt="">
                       </div>
@@ -227,12 +212,12 @@ $posts = listPosts();
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Related Searches</h6>
-                  <div class="py-2"><a class="dropdown-item" href="#">
+                  <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"><span class="fa-brands fa-firefox-browser text-body" data-fa-transform="shrink-2"></span> Search in the Web MacBook</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-brands fa-chrome text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                       </div>
@@ -690,7 +675,7 @@ $posts = listPosts();
           <a class="navbar-brand me-1 me-sm-3" href="../index-1.html">
             <div class="d-flex align-items-center">
               <div class="d-flex align-items-center"><img src="../assets/img/icons/logo-1.png" alt="phoenix" width="27">
-                <h5 class="logo-text ms-2 d-none d-sm-block">phoenix</h5>
+                <h5 class="logo-text ms-2 d-none d-sm-block">Investmate</h5>
               </div>
             </div>
           </a>
@@ -702,10 +687,10 @@ $posts = listPosts();
                 <li><a class="dropdown-item" href="../index-1.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="shopping-cart"></span>E commerce</div>
                   </a></li>
-                <li><a class="dropdown-item" href="project-management.html">
+                <li><a class="dropdown-item active" href="project-management.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clipboard"></span>Project management</div>
                   </a></li>
-                <li><a class="dropdown-item active" href="crm.html">
+                <li><a class="dropdown-item" href="crm.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="phone"></span>CRM</div>
                   </a></li>
                 <li><a class="dropdown-item" href="travel-agency.html">
@@ -756,7 +741,7 @@ $posts = listPosts();
                         <li><a class="dropdown-item" href="../apps/e-commerce/landing/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                           </a></li>
                         <li><a class="dropdown-item" href="../apps/e-commerce/landing/products-filter.html">
@@ -1037,7 +1022,7 @@ $posts = listPosts();
                 <li><a class="dropdown-item" href="../pages/notifications.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                   </a></li>
-                <li><a class="dropdown-item" href="#">
+                <li><a class="dropdown-item" href="../pages/members.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                   </a></li>
                 <li><a class="dropdown-item" href="../pages/timeline.html">
@@ -1507,10 +1492,10 @@ $posts = listPosts();
                 <li><a class="dropdown-item" href="../index-1.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="shopping-cart"></span>E commerce</div>
                   </a></li>
-                <li><a class="dropdown-item" href="project-management.html">
+                <li><a class="dropdown-item active" href="project-management.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clipboard"></span>Project management</div>
                   </a></li>
-                <li><a class="dropdown-item active" href="crm.html">
+                <li><a class="dropdown-item" href="crm.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="phone"></span>CRM</div>
                   </a></li>
                 <li><a class="dropdown-item" href="travel-agency.html">
@@ -1561,7 +1546,7 @@ $posts = listPosts();
                         <li><a class="dropdown-item" href="../apps/e-commerce/landing/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                           </a></li>
                         <li><a class="dropdown-item" href="../apps/e-commerce/landing/products-filter.html">
@@ -1842,7 +1827,7 @@ $posts = listPosts();
                 <li><a class="dropdown-item" href="../pages/notifications.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                   </a></li>
-                <li><a class="dropdown-item" href="#">
+                <li><a class="dropdown-item" href="../pages/members.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                   </a></li>
                 <li><a class="dropdown-item" href="../pages/timeline.html">
@@ -2314,10 +2299,10 @@ $posts = listPosts();
                 <li><a class="dropdown-item" href="../index-1.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="shopping-cart"></span>E commerce</div>
                   </a></li>
-                <li><a class="dropdown-item" href="project-management.html">
+                <li><a class="dropdown-item active" href="project-management.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clipboard"></span>Project management</div>
                   </a></li>
-                <li><a class="dropdown-item active" href="crm.html">
+                <li><a class="dropdown-item" href="crm.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="phone"></span>CRM</div>
                   </a></li>
                 <li><a class="dropdown-item" href="travel-agency.html">
@@ -2368,7 +2353,7 @@ $posts = listPosts();
                         <li><a class="dropdown-item" href="../apps/e-commerce/landing/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                           </a></li>
                         <li><a class="dropdown-item" href="../apps/e-commerce/landing/products-filter.html">
@@ -2649,7 +2634,7 @@ $posts = listPosts();
                 <li><a class="dropdown-item" href="../pages/notifications.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                   </a></li>
-                <li><a class="dropdown-item" href="#">
+                <li><a class="dropdown-item" href="../pages/members.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                   </a></li>
                 <li><a class="dropdown-item" href="../pages/timeline.html">
@@ -3119,10 +3104,10 @@ $posts = listPosts();
                 <li><a class="dropdown-item" href="../index-1.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="shopping-cart"></span>E commerce</div>
                   </a></li>
-                <li><a class="dropdown-item" href="project-management.html">
+                <li><a class="dropdown-item active" href="project-management.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clipboard"></span>Project management</div>
                   </a></li>
-                <li><a class="dropdown-item active" href="crm.html">
+                <li><a class="dropdown-item" href="crm.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="phone"></span>CRM</div>
                   </a></li>
                 <li><a class="dropdown-item" href="travel-agency.html">
@@ -3173,7 +3158,7 @@ $posts = listPosts();
                         <li><a class="dropdown-item" href="../apps/e-commerce/landing/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                           </a></li>
                         <li><a class="dropdown-item" href="../apps/e-commerce/landing/products-filter.html">
@@ -3454,7 +3439,7 @@ $posts = listPosts();
                 <li><a class="dropdown-item" href="../pages/notifications.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                   </a></li>
-                <li><a class="dropdown-item" href="#">
+                <li><a class="dropdown-item" href="../pages/members.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                   </a></li>
                 <li><a class="dropdown-item" href="../pages/timeline.html">
@@ -3916,7 +3901,7 @@ $posts = listPosts();
               <a class="navbar-brand me-1 me-sm-3" href="../index-1.html">
                 <div class="d-flex align-items-center">
                   <div class="d-flex align-items-center"><img src="../assets/img/icons/logo-1.png" alt="phoenix" width="27">
-                    <h5 class="logo-text ms-2 d-none d-sm-block">phoenix</h5>
+                    <h5 class="logo-text ms-2 d-none d-sm-block">Investmate</h5>
                   </div>
                 </div>
               </a>
@@ -3932,12 +3917,12 @@ $posts = listPosts();
                     <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">results</span></h6>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Recently Searched </h6>
-                    <div class="py-2"><a class="dropdown-item" href="#">
+                    <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
                         </div>
@@ -3945,14 +3930,14 @@ $posts = listPosts();
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Products</h6>
-                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../apps/e-commerce/landing/product-details.html">
                         <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../assets/img/products/60x60/3-1.png" alt=""></div>
                         <div class="flex-1">
                           <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
                           <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
                         </div>
                       </a>
-                      <a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                      <a class="dropdown-item py-2 d-flex align-items-center" href="../apps/e-commerce/landing/product-details.html">
                         <div class="file-thumbnail me-2"><img class="img-fluid" src="../assets/img/products/60x60/3-1.png" alt=""></div>
                         <div class="flex-1">
                           <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
@@ -3962,12 +3947,12 @@ $posts = listPosts();
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Quick Links</h6>
-                    <div class="py-2"><a class="dropdown-item" href="#">
+                    <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Support MacBook House</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                         </div>
@@ -3975,17 +3960,17 @@ $posts = listPosts();
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Files</h6>
-                    <div class="py-2"><a class="dropdown-item" href="#">
+                    <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-file-zipper text-body" data-fa-transform="shrink-2"></span> Library MacBook folder.rar</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-file-lines text-body" data-fa-transform="shrink-2"></span> Feature MacBook extensions.txt</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-image text-body" data-fa-transform="shrink-2"></span> MacBook Pro_13.jpg</div>
                         </div>
@@ -3993,7 +3978,7 @@ $posts = listPosts();
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Members</h6>
-                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../pages/members.html">
                         <div class="avatar avatar-l status-online  me-2 text-body">
                           <img class="rounded-circle " src="../assets/img/team/40x40/10-1.webp" alt="">
                         </div>
@@ -4002,7 +3987,7 @@ $posts = listPosts();
                           <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
                         </div>
                       </a>
-                      <a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                      <a class="dropdown-item py-2 d-flex align-items-center" href="../pages/members.html">
                         <div class="avatar avatar-l  me-2 text-body">
                           <img class="rounded-circle " src="../assets/img/team/40x40/12-1.webp" alt="">
                         </div>
@@ -4014,12 +3999,12 @@ $posts = listPosts();
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Related Searches</h6>
-                    <div class="py-2"><a class="dropdown-item" href="#">
+                    <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"><span class="fa-brands fa-firefox-browser text-body" data-fa-transform="shrink-2"></span> Search in the Web MacBook</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="#">
+                      <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-brands fa-chrome text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                         </div>
@@ -4256,10 +4241,10 @@ $posts = listPosts();
                   <li><a class="dropdown-item" href="../index-1.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="shopping-cart"></span>E commerce</div>
                     </a></li>
-                  <li><a class="dropdown-item" href="project-management.html">
+                  <li><a class="dropdown-item active" href="project-management.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clipboard"></span>Project management</div>
                     </a></li>
-                  <li><a class="dropdown-item active" href="crm.html">
+                  <li><a class="dropdown-item" href="crm.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="phone"></span>CRM</div>
                     </a></li>
                   <li><a class="dropdown-item" href="travel-agency.html">
@@ -4310,7 +4295,7 @@ $posts = listPosts();
                           <li><a class="dropdown-item" href="../apps/e-commerce/landing/homepage.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="#">
+                          <li><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                             </a></li>
                           <li><a class="dropdown-item" href="../apps/e-commerce/landing/products-filter.html">
@@ -4591,7 +4576,7 @@ $posts = listPosts();
                   <li><a class="dropdown-item" href="../pages/notifications.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                     </a></li>
-                  <li><a class="dropdown-item" href="#">
+                  <li><a class="dropdown-item" href="../pages/members.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                     </a></li>
                   <li><a class="dropdown-item" href="../pages/timeline.html">
@@ -4937,100 +4922,68 @@ $posts = listPosts();
       <div class="content">
         <div class="row gy-3 mb-6 justify-content-between">
           <div class="col-md-9 col-auto">
-            <h2 class="mb-2 text-body-emphasis">Blog Post(10)</h2>
+            <h2 class="mb-2 text-body-emphasis">Edit New Blog</h2>
           </div>
-          <div class="col-md-3 col-auto">
-            <div class="flatpickr-input-container">
-              <input class="form-control ps-6 datetimepicker" id="datepicker" type="text" data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'>
-              <span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-            </div>
-          </div>
+          
         </div>
         
+        <form class="row g-3" action="edit.php" method="POST" enctype="multipart/form-data">
+            <div class="col-md-10">
+              <label class="form-label" for="title">Title</label>
+              <input class="form-control" style="height: 50px;" value="<?php echo $post['title']; ?>" id="title" name="title" type="title" required placeholder="Enter your title">
+            </div>
+            <div class="col-md-5">
+                <label class="form-label" for="inputState">Category</label>
+                <select class="form-select" style="height: 50px;" id="category" name="category" required>
+                  <option >Choose...</option>
+                  <option value="Category 1" <?php echo ($post['category'] === 'Category 1') ? 'selected' : ''; ?>>Politics</option>
+                  <option value="Category 2" <?php echo ($post['category'] === 'Category 3') ? 'selected' : ''; ?>>Business</option>
+                  <option value="Category 3" <?php echo ($post['category'] === 'Category 3') ? 'selected' : ''; ?>>Video</option>
+                  <option selected="selected">Fashion</option>
+                  <option selected="selected">Sports</option>
+                  <option selected="selected">Tech</option>
+                  <option selected="selected">Life Style</option>
 
-        <div class="table-list" id="advanceAjaxTable">
-          <div class="table-responsive scrollbar mb-3">
-            <table class="table table-sm fs-9 mb-0 overflow-hidden">
-              <thead class="text-body">
-                <tr>
-                  <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId" style="min-width: 4.5rem;">S/N</th>
-                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Blog Title</th>
-                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Category</th>
-                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Content</th>
-                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Caption</th>
+                </select>
+              </div>
+              <div class="col-md-5">
+                <label class="form-label" for="caption">Caption</label>
+                <select class="form-select" id="caption" name="cation" value="<?php echo $post['caption']; ?>" style="height: 50px;" id="inputState" required>
+                  <option selected="selected">Choose...</option>
+                  <option selected="selected">Business</option>
+                  <option selected="selected">Choose...</option>
 
-                  <th class="sort pe-1 align-middle white-space-nowrap pe-7" data-sort="date">Date</th>
-                  <th class="no-sort"></th>
-                </tr>
-              </thead>
-              <tbody class="list">
-                
-              <?php foreach ($posts as $post): ?>
-              <tr class="btn-reveal-trigger">
-<td class="order py-2  ps-3 align-middle white-space-nowrap">
-<a class="fw-semibold" href="#">
-<?php echo $post['post_id']; ?>
-</a>
-</td>
-<td class="py-2 align-middle fw-bold">
-<a class="fw-semibold text-body" href="#!">
-<?php echo $post['title']; ?>
-</a>
-</td>
-<td class="py-2 align-middle">
-<?php echo $post['category']; ?>
-</td>
-<td class="py-2 align-middle white-space-nowrap">
-<?php echo $post['content']; ?>
-</td>
-<td class="py-2 align-middle white-space-nowrap">
-<p class="mb-0"><?php echo $post['caption']; ?></p>
-</td>
-<td class="py-2 align-middle white-space-nowrap">
-<p class="mb-0"><?php echo $post['date']; ?></p>
-</td>
-<td class="py-2 align-middle white-space-nowrap text-end">
-<div class="dropstart position-static d-inline-block">
-  <button class="btn btn-link text-body btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-2" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
-    <svg class="svg-inline--fa fa-ellipsis fs-9" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"></path></svg><!-- <span class="fas fa-ellipsis-h fs-9"></span> Font Awesome fontawesome.com -->
-  </button>
-  <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="order-dropdown-2">
-    <a href="#" onclick="deletePost(<?php echo $post_id; ?>)" class="dropdown-item">Delete</a>
-    <!-- <a href="#" onclick="updatePost(<?php echo $post_id; ?>)" class="dropdown-item">Edit</a> -->
+                  <option>...</option>
+                </select>
+              </div>
 
-</div>
-</td>
-</tr>
-
-
-
-<?php endforeach; ?>
-</tbody>
-
-</table>
- </div>
-<div class="d-flex justify-content-center mt-3">
- <button class="page-link disabled" data-list-pagination="prev" disabled=""><svg class="svg-inline--fa fa-chevron-left" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path></svg><!-- <span class="fas fa-chevron-left"></span> Font Awesome fontawesome.com --></button>
-    <ul class="mb-0">
-    <li class="active"><button class="page" type="button" data-i="1" data-page="1">1</button></li>
-    <!-- <li><button class="page" type="button" data-i="2" data-page="10">2</button></li>
-    <li><button class="page" type="button" data-i="3" data-page="10">3</button></li> -->
-    </ul>
-    <button class="page-link pe-0" data-list-pagination="next">
-    <svg class="svg-inline--fa fa-chevron-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path></svg>
- </button>
- </div>
-</div>
+              <div class="col-md-10 mb-3">
+                <label class="form-label" for="tag">Tags (comma-separated)</label>
+                <input class="form-control" type="text" name="tag" id="tage" value="<?php echo $post['tags']; ?>"  style="height: 50px;" required />
+              </div>
+           
+            <div class="col-md-10 mb-3">
+                <label class="form-label" for="file_attachement">File Attachment</label>
+                <input class="form-control"  style="height: 50px;" type="file" id="file_attachement" name="file_attachement" required/>
+              </div>
+            
+              <div class="col-md-10">
+                <label for="content">Content</label>
+                <textarea id="content" style="height: 90%;" required><?php echo $post['content']; ?></textarea>
+              </div>
+            
+            <div class="col-10 mb-3">
+              <button class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit">Post</button>
+            </div>
+          </form>
+       
       
-
-
-        
         <footer class="footer position-absolute">
           <div class="row g-0 justify-content-between align-items-center h-100">
             <div class="col-12 col-sm-auto text-center">
               <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright ©
                 <span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span>
-                <br class="d-sm-none">InvestmateBlog 2024 &copy;<a class="mx-1" href="">. All Rights Reserved</a>
+                <br class="d-sm-none">InvestmateBlog 2024 <a class="mx-1" href="">. All Rights Reserved</a>
               </p>
 
             </div>
@@ -5053,12 +5006,12 @@ $posts = listPosts();
                       <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">results</span></h6>
                       <hr class="my-0">
                       <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Recently Searched </h6>
-                      <div class="py-2"><a class="dropdown-item" href="#">
+                      <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
                           </div>
                         </a>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
                           </div>
@@ -5066,14 +5019,14 @@ $posts = listPosts();
                       </div>
                       <hr class="my-0">
                       <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Products</h6>
-                      <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                      <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../apps/e-commerce/landing/product-details.html">
                           <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../assets/img/products/60x60/3-1.png" alt=""></div>
                           <div class="flex-1">
                             <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
                             <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
                           </div>
                         </a>
-                        <a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                        <a class="dropdown-item py-2 d-flex align-items-center" href="../apps/e-commerce/landing/product-details.html">
                           <div class="file-thumbnail me-2"><img class="img-fluid" src="../assets/img/products/60x60/3-1.png" alt=""></div>
                           <div class="flex-1">
                             <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
@@ -5083,12 +5036,12 @@ $posts = listPosts();
                       </div>
                       <hr class="my-0">
                       <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Quick Links</h6>
-                      <div class="py-2"><a class="dropdown-item" href="#">
+                      <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Support MacBook House</div>
                           </div>
                         </a>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                           </div>
@@ -5096,17 +5049,17 @@ $posts = listPosts();
                       </div>
                       <hr class="my-0">
                       <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Files</h6>
-                      <div class="py-2"><a class="dropdown-item" href="#">
+                      <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-file-zipper text-body" data-fa-transform="shrink-2"></span> Library MacBook folder.rar</div>
                           </div>
                         </a>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-file-lines text-body" data-fa-transform="shrink-2"></span> Feature MacBook extensions.txt</div>
                           </div>
                         </a>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-image text-body" data-fa-transform="shrink-2"></span> MacBook Pro_13.jpg</div>
                           </div>
@@ -5114,7 +5067,7 @@ $posts = listPosts();
                       </div>
                       <hr class="my-0">
                       <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Members</h6>
-                      <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                      <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../pages/members.html">
                           <div class="avatar avatar-l status-online  me-2 text-body">
                             <img class="rounded-circle " src="../assets/img/team/40x40/10-1.webp" alt="">
                           </div>
@@ -5123,7 +5076,7 @@ $posts = listPosts();
                             <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
                           </div>
                         </a>
-                        <a class="dropdown-item py-2 d-flex align-items-center" href="#">
+                        <a class="dropdown-item py-2 d-flex align-items-center" href="../pages/members.html">
                           <div class="avatar avatar-l  me-2 text-body">
                             <img class="rounded-circle " src="../assets/img/team/40x40/12-1.webp" alt="">
                           </div>
@@ -5135,12 +5088,12 @@ $posts = listPosts();
                       </div>
                       <hr class="my-0">
                       <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Related Searches</h6>
-                      <div class="py-2"><a class="dropdown-item" href="#">
+                      <div class="py-2"><a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"><span class="fa-brands fa-firefox-browser text-body" data-fa-transform="shrink-2"></span> Search in the Web MacBook</div>
                           </div>
                         </a>
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="../apps/e-commerce/landing/product-details.html">
                           <div class="d-flex align-items-center">
                             <div class="fw-normal text-body-highlight title"> <span class="fa-brands fa-chrome text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                           </div>
@@ -5194,6 +5147,7 @@ $posts = listPosts();
     <!-- ===============================================-->
 
     
+    
 
     <!-- ===============================================-->
     <!--    JavaScripts-->
@@ -5207,13 +5161,24 @@ $posts = listPosts();
     <script src="../vendors/list.js/list.min-1.js"></script>
     <script src="../vendors/feather-icons/feather.min-1.js"></script>
     <script src="../vendors/dayjs/dayjs.min-1.js"></script>
+    <script src="../vendors/choices/choices.min.js"></script>
     <script src="../vendors/echarts/echarts.min.js"></script>
+    <script src="../vendors/dhtmlx-gantt/dhtmlxgantt.js"></script>
+    <script src="../vendors/flatpickr/flatpickr.min.js"></script>
     <script src="../assets/js/phoenix-1.js"></script>
-    <script src="../assets/js/crm-dashboard.js"></script>
+    <script src="../assets/js/projectmanagement-dashboard.js"></script>
+    <script>
+      ClassicEditor
+          .create(document.querySelector("content"))
+          .catch(error => {
+              console.error( error );
+          } );
+      </script>
   </body>
 
 </html>
 
-<!-- <?php
+<?php
+// Close the connection when done
 closeConnection();
-?> -->
+?>

@@ -1,4 +1,28 @@
-﻿<!DOCTYPE html>
+﻿<?php
+include 'crud_operation.php';
+
+// Handle form submission for creating a new blog post
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_new.php'])) {
+  $title = $_POST['title'];
+  $caption = $_POST['caption'];
+  $content = $_POST['content'];
+  $category = $_POST['category'];
+  $tags = $_POST['tags'];
+  $file = $_FILES['file_attachement'];
+  $user_id = $_POST['user_id'];
+
+  try {
+      createBlogPost($title, $caption, $category, $content,  $tags, $file, $user_id);
+      echo "Blog post created successfully.";
+  } catch (Exception $e) {
+      echo "Error: " . $e->getMessage();
+  }
+}
+
+?>
+
+
+<!DOCTYPE html>
 <html lang="en-US" dir="ltr" data-navigation-type="default" data-navbar-horizontal-shape="default">
 
   <head>
@@ -72,7 +96,10 @@
                 <div class="nav-item-wrapper">
                   <div class="parent-wrapper label-1">
                     <ul class="nav collapse parent show" data-bs-parent="#navbarVerticalCollapse" id="nv-home">
-                     
+                    <li class="nav-item"><a class="nav-link" href="user.php">
+                          <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
+                        </a>
+                      </li>
                       <li class="nav-item"><a class="nav-link active" href="add_new.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
                         </a><!-- more inner pages-->
@@ -105,8 +132,13 @@
             </a>
           </div>
           <div class="search-box navbar-top-search-box d-none d-lg-block" data-list='{"valueNames":["title"]}' style="width:25rem;">
-            <form class="position-relative" data-bs-toggle="search" data-bs-display="static"><input class="form-control search-input fuzzy-search rounded-pill form-control-sm" type="search" placeholder="Search..." aria-label="Search">
+            <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
+              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" id="user_id" name="user_id" required type="search" placeholder="Search..." aria-label="Search">
               <span class="fas fa-search search-box-icon"></span>
+              
+               <!-- <?php foreach ($users as $user): ?>
+                <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?></option>
+            <?php endforeach; ?> -->
             </form>
             <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search"><button class="btn btn-link p-0" aria-label="Close"></button></div>
             <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
@@ -4907,49 +4939,48 @@
       <div class="content">
         <div class="row gy-3 mb-6 justify-content-between">
           <div class="col-md-9 col-auto">
-            <h2 class="mb-2 text-body-emphasis">Add New Blog</h2>
+            <h2 class="mb-2 text-body-emphasis">Add New Post</h2>
           </div>
           
         </div>
         
-        <form class="row g-3">
+        <form class="row g-3" action="add_new.php" method="POST" enctype="multipart/form-data">
             <div class="col-md-10">
-              <label class="form-label" for="inputEmail4">Title</label>
-              <input class="form-control" style="height: 50px;" id="inputEmail4" type="title" placeholder="Enter your title">
+              <label class="form-label" for="title">Title</label>
+              <input class="form-control" name="title" id="title" type="text" style="height: 50px;" required placeholder="Enter your title">
             </div>
             <div class="col-md-5">
-                <label class="form-label" for="inputState">Category</label>
-                <select class="form-select" style="height: 50px;" id="inputState">
+                <label class="form-label" for="category">Category</label>
+                <select class="form-select" name="category" style="height: 50px;" required id="category">
                   <option selected="selected">Choose...</option>
                   <option selected="selected">Politics</option>
-                  <option selected="selected">Business</option>
-                  <option selected="selected">Video</option>
-                  <option selected="selected">Fashion</option>
-                  <option selected="selected">Sports</option>
-                  <option selected="selected">Tech</option>
-                  <option selected="selected">Life Style</option>
 
                 </select>
               </div>
               <div class="col-md-5">
-                <label class="form-label" for="inputState">Caption</label>
-                <select class="form-select" style="height: 50px;" id="inputState">
+                <label class="form-label" for="caption">Caption</label>
+                <select class="form-select" name="caption" style="height: 50px;" required name="caption" id="caption">
                   <option selected="selected">Choose...</option>
                   <option selected="selected">Business</option>
-                  <option selected="selected">Choose...</option>
-
-                  <option>...</option>
                 </select>
+              </div>
+
+              <div class="col-md-10 mb-3">
+                <label class="form-label" for="tag">Tags (comma-separated)</label>
+                <input class="form-control" type="text" name="tag" id="tage"  required style="height: 50px;"  />
               </div>
            
             <div class="col-md-10 mb-3">
-                <label class="form-label">Upload Image</label>
-                <input class="form-control"  style="height: 50px;" type="file" />
+                <label class="form-label"for="file_attachemen" >File Attachment</label>
+                <input class="form-control"  style="height: 50px;" type="file" id="file_attachement" name="file_attachement"/>
               </div>
             
               <div class="col-md-10" >
-                <textarea id="myTextarea" style="height: 90%;"></textarea>
+                <label class="form-label" for="content">Content</label>
+                <textarea id="content" name="content"></textarea>
               </div>
+
+             
             
             <div class="col-10 mb-3">
               <button class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit">Post</button>
@@ -5148,7 +5179,7 @@
     <script src="../assets/js/projectmanagement-dashboard.js"></script>
     <script>
       ClassicEditor
-          .create(document.querySelector("#myTextarea"))
+          .create(document.querySelector("#content"))
           .catch(error => {
               console.error( error );
           } );

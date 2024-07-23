@@ -1,6 +1,6 @@
-﻿<?php
-include 'crud_operation.php';
+<?php 
 
+include 'crud_operation.php';
 // Handle deletion of a blog post
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
   $post_id = $_POST['post_id'];
@@ -13,11 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
   }
 }
 
-// Fetch the list of posts
-$posts = listPosts();
-// $posts = updatePost();
-
-
+// Fetch the list of posts and users
+$users = listUsers();
 
 ?>
 
@@ -92,7 +89,7 @@ $posts = listPosts();
                   <div class="parent-wrapper label-1">
                     <ul class="nav collapse parent show" data-bs-parent="#navbarVerticalCollapse" id="nv-home">
                    
-                    <li class="nav-item"><a class="nav-link" href="user.php">
+                    <li class="nav-item"><a class="nav-link active" href="user.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
@@ -100,7 +97,7 @@ $posts = listPosts();
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link active" href="blog_list.php">
+                      <li class="nav-item"><a class="nav-link" href="blog_list.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a>
                       </li>
@@ -134,8 +131,7 @@ $posts = listPosts();
             </a>
           </div>
           <div class="search-box navbar-top-search-box d-none d-lg-block" data-list='{"valueNames":["title"]}' style="width:25rem;">
-            <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
-              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm"  type="search" placeholder="Search..." aria-label="Search">
+            <form class="position-relative" data-bs-toggle="search" data-bs-display="static"><input class="form-control search-input fuzzy-search rounded-pill form-control-sm" type="search" placeholder="Search..." aria-label="Search">
               <span class="fas fa-search search-box-icon"></span>
             </form>
             <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search"><button class="btn btn-link p-0" aria-label="Close"></button></div>
@@ -4934,16 +4930,14 @@ $posts = listPosts();
       </script>
       
 
+
       <div class="content">
         <div class="row gy-3 mb-6 justify-content-between">
           <div class="col-md-9 col-auto">
-            <h2 class="mb-2 text-body-emphasis">Blog Post(10)</h2>
+            <h2 class="mb-2 text-body-emphasis">User(10)</h2>
           </div>
           <div class="col-md-3 col-auto">
-            <div class="flatpickr-input-container">
-              <input class="form-control ps-6 datetimepicker" id="datepicker" type="text" data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'>
-              <span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-            </div>
+            <div class="flatpickr-input-container"><input class="form-control ps-6 datetimepicker" id="datepicker" type="text" data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'><span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span></div>
           </div>
         </div>
         
@@ -4954,40 +4948,36 @@ $posts = listPosts();
               <thead class="text-body">
                 <tr>
                   <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId" style="min-width: 4.5rem;">S/N</th>
-                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Blog Title</th>
-                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Category</th>
-                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Content</th>
-                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Caption</th>
-
+                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Name</th>
+                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Email</th>
+                  <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Phone</th>
                   <th class="sort pe-1 align-middle white-space-nowrap pe-7" data-sort="date">Date</th>
                   <th class="no-sort"></th>
                 </tr>
               </thead>
               <tbody class="list">
                 
-              <?php foreach ($posts as $post): ?>
-              <tr class="btn-reveal-trigger">
+<tr class="btn-reveal-trigger">
+
+<?php foreach ($users as $user): ?>
 <td class="order py-2  ps-3 align-middle white-space-nowrap">
 <a class="fw-semibold" href="#">
-<?php echo $post['post_id']; ?>
+<?php echo $post['user_id']; ?>
 </a>
 </td>
 <td class="py-2 align-middle fw-bold">
 <a class="fw-semibold text-body" href="#!">
-<?php echo $post['title']; ?>
+<?php echo $post['user_name']; ?>
 </a>
 </td>
 <td class="py-2 align-middle">
-<?php echo $post['category']; ?>
+<?php echo $post['user_email']; ?>
 </td>
 <td class="py-2 align-middle white-space-nowrap">
-<?php echo $post['content']; ?>
+<?php echo $post['user_phone']; ?>
 </td>
 <td class="py-2 align-middle white-space-nowrap">
-<p class="mb-0"><?php echo $post['caption']; ?></p>
-</td>
-<td class="py-2 align-middle white-space-nowrap">
-<p class="mb-0"><?php echo $post['date']; ?></p>
+<p class="mb-0"><?php echo $post['user_date']; ?></p>
 </td>
 <td class="py-2 align-middle white-space-nowrap text-end">
 <div class="dropstart position-static d-inline-block">
@@ -4995,18 +4985,13 @@ $posts = listPosts();
     <svg class="svg-inline--fa fa-ellipsis fs-9" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"></path></svg><!-- <span class="fas fa-ellipsis-h fs-9"></span> Font Awesome fontawesome.com -->
   </button>
   <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="order-dropdown-2">
-    <a href="#" onclick="deletePost(<?php echo $post_id; ?>)" class="dropdown-item">Delete</a>
-    <!-- <a href="#" onclick="updatePost(<?php echo $post_id; ?>)" class="dropdown-item">Edit</a> -->
-
+    <a href="#!" onclick="deletePost(<?php echo $user_id; ?>)"  class="dropdown-item">Delete</a>
 </div>
 </td>
 </tr>
-
-
-
 <?php endforeach; ?>
-</tbody>
 
+</tbody>
 </table>
  </div>
 <div class="d-flex justify-content-center mt-3">
@@ -5021,7 +5006,6 @@ $posts = listPosts();
  </button>
  </div>
 </div>
-      
 
 
         
