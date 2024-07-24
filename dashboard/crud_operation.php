@@ -10,9 +10,9 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
+$uploadDir ='C:/Users/JOHNSON AKANMU/Documents/';
 // Directory for file uploads
-define('UPLOAD_DIR', 'C:/Users/JIDE/Desktop/femi/documents/');
+define('UPLOAD_DIR', $uploadDir);
 
 
 // File Upload Function
@@ -38,8 +38,9 @@ function uploadFile($file) {
 
 // File Retrieval Function
 function getFileUrl($fileName) {
+    global $uploadDir;
     // URL of the file based on the upload directory
-    $uploadUrl = '/uploads/' . $fileName;
+    $uploadUrl = $uploadDir . $fileName;
     return $uploadUrl;
 }
 
@@ -64,22 +65,24 @@ function validateUser($username, $password) {
 
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
+        if (password_verify($password, $user['password_hash'])) {
             return $user;
         }
     }
     return false;
 }
 
-function createBlogPost($title, $caption, $category, $content, $tags, $file, $user_id) {
+function createBlogPost($title, $caption, $category, $content, $tags, $file) {
     global $conn;
-
+    $user_id = $_SESSION['user_id'];
     // Handle file upload if a file is provided
     $fileUrl = null;
     if (!empty($file['name'])) {
         $fileName = uploadFile($file);
         $fileUrl = getFileUrl($fileName);
     }
+
+    
 
     // Prepare the SQL statement
     $stmt = $conn->prepare("INSERT INTO posts (title, caption, content, category, tags, featured_image_url, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -90,7 +93,7 @@ function createBlogPost($title, $caption, $category, $content, $tags, $file, $us
     }
 
     // Bind the parameters
-    $stmt->bind_param("ssssssi", $title,$caption, $content, $category, $tags, $fileUrl, $user_id);
+    $stmt->bind_param("ssssssi", $title, $caption, $content, $category, $tags, $fileUrl, $user_id);
 
     // Execute the statement
     if (!$stmt->execute()) {
@@ -148,45 +151,28 @@ function deletePost($post_id) {
 
 
 // Create User
-// function createUsers($username, $password, $email, $phone) {
-//     global $conn;
-//     $stmt = $conn->prepare("INSERT INTO users (username, email, password, phone) VALUES (?, ?, ?, ?)");
-//     $stmt->bind_param("sss", $username, $email, $password, $phone);
-//     $stmt->execute();
-//     $stmt->close();
-// }
-
-function createUser($username, $email, $phone, $password) {
+function createUser($first_name, $last_name, $username, $email, $phone, $password, $photo) {
     global $conn;
+    $fileUrl = null;
 
-    // Hash the password before storing it
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password, phone) VALUES (?, ?, ?, ?)");
-
-    // Check if the statement was prepared successfully
-    if ($stmt === false) {
-        die('Prepare failed: ' . htmlspecialchars($conn->error));
+    // Handle file upload if photo is provided
+    if ($photo && !empty($photo['name'])) {
+        $fileName = uploadFile($photo);
+        $fileUrl = getFileUrl($fileName);
     }
 
-    // Bind the parameters
-    $stmt->bind_param("ssss", $username, $email, $hashedPassword, $phone);
+    // Hash the password before saving
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("INSERT INTO users (first_name, last_name,username, email, phone, password_hash, profile_picture_url) VALUES (?, ?, ?, ?, ?,?,?)");
+    $stmt->bind_param("sssssss", $first_name, $last_name,$username, $email, $phone, $hashedPassword, $fileUrl);
     // Execute the statement
     if (!$stmt->execute()) {
         die('Execute failed: ' . htmlspecialchars($stmt->error));
     }
-
-    // Close the statement
     $stmt->close();
 }
-
-
-
-
-
-
 
 
 // List Users

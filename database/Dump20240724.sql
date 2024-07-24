@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: investmate_admin
 -- ------------------------------------------------------
--- Server version	8.0.27
+-- Server version	8.0.37
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -122,7 +122,7 @@ CREATE TABLE `posts` (
   PRIMARY KEY (`post_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +131,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES (1,1,'Information Management','<p>Good to knwo this is really great</p>',NULL,'2024-07-23 16:55:19','2024-07-23 18:25:28',NULL,'draft','/uploads/669ff5986e66d-photograph.jpeg','Life Style',NULL);
+INSERT INTO `posts` VALUES (57,3,'Data Center Loading & Security','<p>ms,..,,mfklfnh3bhktjnov;o/wlf;/htripw;l;ft\'4/r3</p>','Trending','2024-07-24 16:51:16','2024-07-24 16:51:16',NULL,'draft','C:/Users/JOHNSON AKANMU/Documents/66a131045f95a-IMG_20230211_121954_5.jpg','Tech','Love'),(58,3,'10 Life-Changing Hacks Every Working Mom Should Know','<p>jkjkjkshkhkhkhhmcjnhkjnhkrjehkf</p>','Enducation','2024-07-24 17:01:35','2024-07-24 17:01:35',NULL,'draft','C:/Users/JOHNSON AKANMU/Documents/66a1336f8fa32-IMG_20230101_143121_0.jpg','Politics','Popular'),(59,3,'10 Life-Changing Hacks Every Working Mom Should Know','<p>jkjkjkshkhkhkhhmcjnhkjnhkrjehkf</p>','Enducation','2024-07-24 17:04:55','2024-07-24 17:04:55',NULL,'draft','C:/Users/JOHNSON AKANMU/Documents/66a134378e4f8-IMG_20230101_143121_0.jpg','Politics','Popular'),(60,3,'10 Life-Changing Hacks Every Working Mom Should Know','<p>jkjkjkshkhkhkhhmcjnhkjnhkrjehkf</p>','Enducation','2024-07-24 17:05:02','2024-07-24 17:05:02',NULL,'draft','C:/Users/JOHNSON AKANMU/Documents/66a1343e790c2-IMG_20230101_143121_0.jpg','Politics','Popular'),(61,3,'10 Life-Changing Hacks Every Working Mom Should Know','<p>jkjkjkshkhkhkhhmcjnhkjnhkrjehkf</p>','Enducation','2024-07-24 17:06:15','2024-07-24 17:06:15',NULL,'draft','C:/Users/JOHNSON AKANMU/Documents/66a13487d3409-IMG_20230101_143121_0.jpg','Politics','Popular');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,7 +210,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +219,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','odofin@swipe.ng','test','Oyejide','Odofin','default.png','test','2024-07-23 16:14:32','2024-07-23 16:14:32',NULL);
+INSERT INTO `users` VALUES (3,'odofin','odofin','$2y$10$A1fgN9jSXlQtiduwkMh43u1oPDi2bFZOiqUJ3cKRmL.HAPsXTM/qK','OYEJIDE','ODOFIN','C:/Users/JIDE/Desktop/femi/documents/66a0a9506036d-photograph.jpeg',NULL,'2024-07-24 07:12:16','2024-07-24 07:12:16','NA'),(4,'Johnson Akanmu','johnsonakanmu2017@gmail.com','$2y$10$gt7pC.yoAKAOi5xJb5Aoxuxesi9UxU8rfAuCFf1UAvAOdrlJE1jpG','Akanmu','Johnson','C:\\Users\\JOHNSON AKANMU\\Documents66a0fe09363aa-Pic.png',NULL,'2024-07-24 13:13:45','2024-07-24 13:13:45','07069239814');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -232,4 +232,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-23 19:45:14
+-- Dump completed on 2024-07-24 18:50:14
