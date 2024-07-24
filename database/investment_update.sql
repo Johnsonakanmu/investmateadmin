@@ -122,7 +122,7 @@ CREATE TABLE `posts` (
   PRIMARY KEY (`post_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +131,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES (1,1,'Information Management','<p>Good to knwo this is really great</p>',NULL,'2024-07-23 16:55:19','2024-07-23 18:25:28',NULL,'draft','/uploads/669ff5986e66d-photograph.jpeg','Life Style',NULL);
+INSERT INTO `posts` VALUES (5,3,'This is another test for blog posting','<p>This is really good that the blog is working fine as expected.</p>','Trending','2024-07-24 07:51:04','2024-07-24 07:51:04',NULL,'draft','C:/Users/JIDE/Desktop/femi/documents/66a0b268265fb-Capture1.PNG','Politics','Come, Go, Test');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -210,7 +210,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +219,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','odofin@swipe.ng','test','Oyejide','Odofin','default.png','test','2024-07-23 16:14:32','2024-07-23 16:14:32',NULL);
+INSERT INTO `users` VALUES (3,'odofin','odofin','$2y$10$A1fgN9jSXlQtiduwkMh43u1oPDi2bFZOiqUJ3cKRmL.HAPsXTM/qK','OYEJIDE','ODOFIN','C:/Users/JIDE/Desktop/femi/documents/66a0a9506036d-photograph.jpeg',NULL,'2024-07-24 07:12:16','2024-07-24 07:12:16','NA');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -232,4 +232,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-23 19:45:14
+-- Dump completed on 2024-07-24  9:06:10
