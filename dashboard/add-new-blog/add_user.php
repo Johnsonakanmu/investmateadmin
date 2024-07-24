@@ -1,31 +1,18 @@
-<?php
-// Include the CRUD operations script
-include '../../crud_operation.php';
-$post = null;
-if (isset($_GET['post_id'])) {
-    $post_id = $_GET['post_id'];
-    $post = getPostById($post_id);
+
+<?php 
+
+include '../crud_operation.php';
+// Handle deletion of a blog post
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
+  $post_id = $_POST['post_id'];
+
+  try {
+      deletePost($post_id);
+      echo "Blog post deleted successfully.";
+  } catch (Exception $e) {
+      echo "Error: " . $e->getMessage();
+  }
 }
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) {
-    $post_id = $_POST['post_id'];
-    $title = $_POST['title'];
-    $caption = $_POST['caption'];
-    $content = $_POST['content'];
-    $category = $_POST['category'];
-    $tags = $_POST['tags'];
-    $file = isset($_FILES['file_attachement']) ? $_FILES['file_attachement'] : null;
-
-    try {
-        updatePost($post_id, $title, $caption, $content, $category, $tags, $file);
-        header('Location: ../'); // Redirect to the manage_blog.php page
-        exit();
-    } catch (Exception $e) {
-        echo "<p>Error: " . $e->getMessage() . "</p>";
-    }
-}
-
-
 ?>
 
 <!DOCTYPE html>
@@ -44,30 +31,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
     <!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/img/favicons/logo-1.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../../../assets/img/favicons/logo-1.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../../../assets/img/favicons/logo-1.png">
-    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/img/favicons/logo-1.png">
-    <link rel="manifest" href="../../../assets/img/favicons/logo-1.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/img/favicons/logo-1.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/img/favicons/logo-1.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/img/favicons/logo-1.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../../assets/img/favicons/logo-1.png">
+    <link rel="manifest" href="../../assets/img/favicons/logo-1.png">
     <meta name="msapplication-TileImage" content="../assets/img/favicons/logo-1.png">
     <meta name="theme-color" content="#ffffff">
-    <script src="../../../vendors/simplebar/simplebar.min-1.js"></script>
-    <script src="../../../assets/js/config-1.js"></script>
+    <script src="../../vendors/simplebar/simplebar.min-1.js"></script>
+    <script src="../../assets/js/config-1.js"></script>
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
-    <link href="../../../vendors/choices/choices.min.css" rel="stylesheet">
-    <link href="../../../vendors/dhtmlx-gantt/dhtmlxgantt.css" rel="stylesheet">
-    <link href="../../../vendors/flatpickr/flatpickr.min.css" rel="stylesheet">
+    <link href="../../vendors/choices/choices.min.css" rel="stylesheet">
+    <link href="../../vendors/dhtmlx-gantt/dhtmlxgantt.css" rel="stylesheet">
+    <link href="../../vendors/flatpickr/flatpickr.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="../../../css2-1?family=Nunito+Sans:wght@300;400;600;700;800;900&amp;display=swap" rel="stylesheet">
-    <link href="../../../vendors/simplebar/simplebar.min-1.css" rel="stylesheet">
+    <link href="../../vendors/simplebar/simplebar.min-1.css" rel="stylesheet">
     <link rel="stylesheet" href="../../../release/v4.0.8/css/line-1.css">
-    <link href="../../../assets/css/theme-rtl.min-1.css" type="text/css" rel="stylesheet" id="style-rtl">
-    <link href="../../../assets/css/theme.min-1.css" type="text/css" rel="stylesheet" id="style-default">
-    <link href="../../../assets/css/user-rtl.min-1.css" type="text/css" rel="stylesheet" id="user-style-rtl">
-    <link href="../../../assets/css/user.min-1.css" type="text/css" rel="stylesheet" id="user-style-default">
+    <link href="../../assets/css/theme-rtl.min-1.css" type="text/css" rel="stylesheet" id="style-rtl">
+    <link href="../../assets/css/theme.min-1.css" type="text/css" rel="stylesheet" id="style-default">
+    <link href="../../assets/css/user-rtl.min-1.css" type="text/css" rel="stylesheet" id="user-style-rtl">
+    <link href="../../assets/css/user.min-1.css" type="text/css" rel="stylesheet" id="user-style-default">
     <script>
       var phoenixIsRTL = window.config.config.phoenixIsRTL;
       if (phoenixIsRTL) {
@@ -102,22 +89,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <div class="nav-item-wrapper">
                   <div class="parent-wrapper label-1">
                     <ul class="nav collapse parent show" data-bs-parent="#navbarVerticalCollapse" id="nv-home">
-                    <li class="nav-item"><a class="nav-link" href="../../users/index.php">
+                    <li class="nav-item"><a class="nav-link" href="../users/">
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../../add-new-blog/index.php">
+                      <li class="nav-item"><a class="nav-link active" href="../add-new-blog/">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
                         </a><!-- more inner pages-->
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../index.php">
+                      <li class="nav-item"><a class="nav-link" href="../blogs/">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
                       </li>
-                      <!-- <li class="nav-item"><a class="nav-link active" href="edit.php">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Edit</span></div>
-                        </a>
-                      </li> -->
+                      
                     </ul>
                   </div>
                 </div>
@@ -134,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
             <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
             <a class="navbar-brand me-1 me-sm-3" href="../index-1.html">
               <div class="d-flex align-items-center">
-                <div class="d-flex align-items-center"><img src="../../../assets/img/icons/logo-1.png" alt="phoenix" width="27">
+                <div class="d-flex align-items-center"><img src="../../assets/img/icons/logo-1.png" alt="phoenix" width="27">
                   <h5 class="logo-text ms-2 d-none d-sm-block">Investmate</h5>
                 </div>
               </div>
@@ -142,8 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
           </div>
           <div class="search-box navbar-top-search-box d-none d-lg-block" data-list='{"valueNames":["title"]}' style="width:25rem;">
             <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
-              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" type="search" placeholder="Search..." aria-label="Search">
+              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" id="user_id" name="user_id" required type="search" placeholder="Search..." aria-label="Search">
               <span class="fas fa-search search-box-icon"></span>
+
             </form>
             <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search"><button class="btn btn-link p-0" aria-label="Close"></button></div>
             <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
@@ -152,12 +137,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">results</span></h6>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Recently Searched </h6>
-                  <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                  <div class="py-2"><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
                       </div>
@@ -165,15 +150,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Products</h6>
-                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../../apps/e-commerce/landing/product-details.html">
-                      <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../../../assets/img/products/60x60/3-1.png" alt=""></div>
+                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../apps/e-commerce/landing/product-details.html">
+                      <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../../assets/img/products/60x60/3-1.png" alt=""></div>
                       <div class="flex-1">
                         <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
                         <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
                       </div>
                     </a>
-                    <a class="dropdown-item py-2 d-flex align-items-center" href="../../../apps/e-commerce/landing/product-details.html">
-                      <div class="file-thumbnail me-2"><img class="img-fluid" src="../../../assets/img/products/60x60/3-1.png" alt=""></div>
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="../../apps/e-commerce/landing/product-details.html">
+                      <div class="file-thumbnail me-2"><img class="img-fluid" src="../../assets/img/products/60x60/3-1.png" alt=""></div>
                       <div class="flex-1">
                         <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
                         <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">30 Sep at 12:30 PM</span></p>
@@ -182,12 +167,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Quick Links</h6>
-                  <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                  <div class="py-2"><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Support MacBook House</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                       </div>
@@ -195,17 +180,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Files</h6>
-                  <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                  <div class="py-2"><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-file-zipper text-body" data-fa-transform="shrink-2"></span> Library MacBook folder.rar</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-file-lines text-body" data-fa-transform="shrink-2"></span> Feature MacBook extensions.txt</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-image text-body" data-fa-transform="shrink-2"></span> MacBook Pro_13.jpg</div>
                       </div>
@@ -213,18 +198,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Members</h6>
-                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../../pages/members.html">
+                  <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../pages/members.html">
                       <div class="avatar avatar-l status-online  me-2 text-body">
-                        <img class="rounded-circle " src="../../../assets/img/team/40x40/10-1.webp" alt="">
+                        <img class="rounded-circle " src="../../assets/img/team/40x40/10-1.webp" alt="">
                       </div>
                       <div class="flex-1">
                         <h6 class="mb-0 text-body-highlight title">Carry Anna</h6>
                         <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
                       </div>
                     </a>
-                    <a class="dropdown-item py-2 d-flex align-items-center" href="../../../pages/members.html">
+                    <a class="dropdown-item py-2 d-flex align-items-center" href="../../pages/members.html">
                       <div class="avatar avatar-l  me-2 text-body">
-                        <img class="rounded-circle " src="../../../assets/img/team/40x40/12-1.webp" alt="">
+                        <img class="rounded-circle " src="../../assets/img/team/40x40/12-1.webp" alt="">
                       </div>
                       <div class="flex-1">
                         <h6 class="mb-0 text-body-highlight title">John Smith</h6>
@@ -234,12 +219,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                   <hr class="my-0">
                   <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Related Searches</h6>
-                  <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                  <div class="py-2"><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"><span class="fa-brands fa-firefox-browser text-body" data-fa-transform="shrink-2"></span> Search in the Web MacBook</div>
                       </div>
                     </a>
-                    <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                       <div class="d-flex align-items-center">
                         <div class="fw-normal text-body-highlight title"> <span class="fa-brands fa-chrome text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                       </div>
@@ -270,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative read border-bottom">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/30-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/30-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">10m</span></p>
@@ -302,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">1h</span></p>
@@ -317,7 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/57-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/57-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Kiera Anderson</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -332,7 +317,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/59-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/59-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Herman Carter</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👤</span>Tagged you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -347,7 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative read ">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/58-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/58-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Benjamin Button</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -362,7 +347,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     </div>
                   </div>
                   <div class="card-footer p-0 border-top border-translucent border-0">
-                    <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../../pages/notifications.html">Notification history</a></div>
+                    <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../pages/notifications.html">Notification history</a></div>
                   </div>
                 </div>
               </div>
@@ -383,46 +368,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <div class="card bg-body-emphasis position-relative border-0">
                   <div class="card-body pt-3 px-3 pb-0 overflow-auto scrollbar" style="height: 20rem;">
                     <div class="row text-center align-items-center gx-0 gy-0">
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Behance</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Cloud</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Slack</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Gitlab</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">BitBucket</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Drive</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Trello</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Figma</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Twitter</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Pinterest</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Linkedin</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Maps</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Photos</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Spotify</p>
                         </a></div>
                     </div>
@@ -432,7 +417,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
             </li>
             <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                 <div class="avatar avatar-l ">
-                  <img class="rounded-circle " src="../../../assets/img/team/40x40/57-1.webp" alt="">
+                  <img class="rounded-circle " src="../../assets/img/team/40x40/57-1.webp" alt="">
                 </div>
               </a>
               <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border" aria-labelledby="navbarDropdownUser">
@@ -440,7 +425,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   <div class="card-body p-0">
                     <div class="text-center pt-4 pb-3">
                       <div class="avatar avatar-xl ">
-                        <img class="rounded-circle " src="../../../assets/img/team/72x72/57-1.webp" alt="">
+                        <img class="rounded-circle " src="../../assets/img/team/72x72/57-1.webp" alt="">
                       </div>
                       <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
                     </div>
@@ -458,7 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                   <div class="card-footer p-0 border-top border-translucent">
                     <ul class="nav d-flex flex-column my-3">
-                      <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
+                      <li class="nav-item"><a class="nav-link px-3 d-block" href="../add-new-blog/add_user.php"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
                     </ul>
                     <hr>
                     <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
@@ -495,7 +480,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative read border-bottom">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/30-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/30-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">10m</span></p>
@@ -527,7 +512,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">1h</span></p>
@@ -542,7 +527,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/57-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/57-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Kiera Anderson</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -557,7 +542,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/59-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/59-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Herman Carter</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👤</span>Tagged you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -572,7 +557,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="px-2 px-sm-3 py-3 notification-card position-relative read ">
                         <div class="d-flex align-items-center justify-content-between position-relative">
                           <div class="d-flex">
-                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/58-1.webp" alt=""></div>
+                            <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/58-1.webp" alt=""></div>
                             <div class="flex-1 me-sm-3">
                               <h4 class="fs-9 text-body-emphasis">Benjamin Button</h4>
                               <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -587,7 +572,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     </div>
                   </div>
                   <div class="card-footer p-0 border-top border-translucent border-0">
-                    <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../../pages/notifications.html">Notification history</a></div>
+                    <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../pages/notifications.html">Notification history</a></div>
                   </div>
                 </div>
               </div>
@@ -608,46 +593,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <div class="card bg-body-emphasis position-relative border-0">
                   <div class="card-body pt-3 px-3 pb-0 overflow-auto scrollbar" style="height: 20rem;">
                     <div class="row text-center align-items-center gx-0 gy-0">
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Behance</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Cloud</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Slack</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Gitlab</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">BitBucket</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Drive</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Trello</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Figma</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Twitter</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Pinterest</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Linkedin</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Maps</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Photos</p>
                         </a></div>
-                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
+                      <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
                           <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Spotify</p>
                         </a></div>
                     </div>
@@ -661,7 +646,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   <div class="card-body p-0">
                     <div class="text-center pt-4 pb-3">
                       <div class="avatar avatar-xl ">
-                        <img class="rounded-circle " src="../../../assets/img/team/72x72/57-1.webp" alt="">
+                        <img class="rounded-circle " src="../../assets/img/team/72x72/57-1.webp" alt="">
                       </div>
                       <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
                     </div>
@@ -696,7 +681,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
           <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopCollapse" aria-controls="navbarTopCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
           <a class="navbar-brand me-1 me-sm-3" href="../index-1.html">
             <div class="d-flex align-items-center">
-              <div class="d-flex align-items-center"><img src="../../../assets/img/icons/logo-1.png" alt="phoenix" width="27">
+              <div class="d-flex align-items-center"><img src="../../assets/img/icons/logo-1.png" alt="phoenix" width="27">
                 <h5 class="logo-text ms-2 d-none d-sm-block">Investmate</h5>
               </div>
             </div>
@@ -718,7 +703,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <li><a class="dropdown-item" href="travel-agency.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../apps/social/feed.html">
+                <li><a class="dropdown-item" href="../../apps/social/feed.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="share-2"></span>Social feed</div>
                   </a></li>
               </ul>
@@ -733,25 +718,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/add-product.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/add-product.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add product</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/products.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/products.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customers.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customers.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customers</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customer-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customer-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customer details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/orders.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/orders.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Orders</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/order-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/order-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/refund.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/refund.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Refund</div>
                           </a></li>
                       </ul>
@@ -760,37 +745,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/products-filter.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/products-filter.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products filter</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/cart.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/cart.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Cart</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/checkout.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/checkout.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/shipping-info.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/shipping-info.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Shipping info</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/profile.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/profile.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/favourite-stores.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/favourite-stores.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Favourite stores</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/wishlist.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/wishlist.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Wishlist</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/order-tracking.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/order-tracking.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order tracking</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/invoice.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/invoice.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Invoice</div>
                           </a></li>
                       </ul>
@@ -801,28 +786,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="phone"></span>CRM</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/crm/analytics.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/analytics.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Analytics</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/deals.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/deals.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deals</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/deal-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/deal-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deal details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/leads.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/leads.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Leads</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/lead-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/lead-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Lead details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/reports.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/reports.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Reports</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/report-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/report-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Report details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/add-contact.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/add-contact.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add contact</div>
                       </a></li>
                   </ul>
@@ -831,22 +816,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="clipboard"></span>Project management</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/project-management/create-new.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/create-new.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create new</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-list-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-list-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project list view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-card-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-card-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project card view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-board-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-board-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project board view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/todo-list.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/todo-list.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Todo list</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-details.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project details</div>
                       </a></li>
                   </ul>
@@ -855,7 +840,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/travel-agency/landing.html">
+                    <li><a class="dropdown-item" href="../../apps/travel-agency/landing.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Landing</div>
                       </a></li>
                     <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="hotel" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
@@ -866,16 +851,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                             <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-property.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-property.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add property</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-room.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-room.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add room</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-listing.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-listing.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Room listing</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-search.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-search.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Search room</div>
                               </a></li>
                           </ul>
@@ -884,22 +869,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                             <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/homepage.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/homepage.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-details.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-details.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel details</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-compare.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-compare.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel compare</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/checkout.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/checkout.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/payment.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/payment.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/gallery.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/gallery.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Gallery</div>
                               </a></li>
                           </ul>
@@ -910,13 +895,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Flight</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/booking.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/booking.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Booking</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/payment.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/payment.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                           </a></li>
                       </ul>
@@ -925,33 +910,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Trip</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/trip-details.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/trip-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Trip details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/checkout.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/checkout.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                           </a></li>
                       </ul>
                     </li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../apps/chat.html">
+                <li><a class="dropdown-item" href="../../apps/chat.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="message-square"></span>Chat</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="email" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="mail"></span>Email</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/email/inbox.html">
+                    <li><a class="dropdown-item" href="../../apps/email/inbox.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Inbox</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/email/email-detail.html">
+                    <li><a class="dropdown-item" href="../../apps/email/email-detail.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Email detail</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/email/compose.html">
+                    <li><a class="dropdown-item" href="../../apps/email/compose.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Compose</div>
                       </a></li>
                   </ul>
@@ -960,10 +945,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="bookmark"></span>Events</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/events/create-an-event.html">
+                    <li><a class="dropdown-item" href="../../apps/events/create-an-event.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create an event</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/events/event-detail.html">
+                    <li><a class="dropdown-item" href="../../apps/events/event-detail.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Event detail</div>
                       </a></li>
                   </ul>
@@ -972,13 +957,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="trello"></span>Kanban</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/kanban/kanban.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/kanban.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Kanban</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/kanban/boards.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/boards.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Boards</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/kanban/create-kanban-board.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/create-kanban-board.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create board</div>
                       </a></li>
                   </ul>
@@ -987,32 +972,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="share-2"></span>Social</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/social/profile.html">
+                    <li><a class="dropdown-item" href="../../apps/social/profile.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/social/settings.html">
+                    <li><a class="dropdown-item" href="../../apps/social/settings.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Settings</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../apps/calendar.html">
+                <li><a class="dropdown-item" href="../../apps/calendar.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="calendar"></span>Calendar</div>
                   </a></li>
               </ul>
             </li>
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-files-landscapes-alt"></span>Pages</a>
               <ul class="dropdown-menu navbar-dropdown-caret">
-                <li><a class="dropdown-item" href="../../../pages/starter.html">
+                <li><a class="dropdown-item" href="../../pages/starter.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="compass"></span>Starter</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="faq" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="help-circle"></span>Faq</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/faq/faq-accordion.html">
+                    <li><a class="dropdown-item" href="../../pages/faq/faq-accordion.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq accordion</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/faq/faq-tab.html">
+                    <li><a class="dropdown-item" href="../../pages/faq/faq-tab.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq tab</div>
                       </a></li>
                   </ul>
@@ -1021,10 +1006,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="globe"></span>Landing</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/landing/default.html">
+                    <li><a class="dropdown-item" href="../../pages/landing/default.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Default</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/landing/alternate.html">
+                    <li><a class="dropdown-item" href="../../pages/landing/alternate.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Alternate</div>
                       </a></li>
                   </ul>
@@ -1033,34 +1018,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="tag"></span>Pricing</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/pricing/pricing-column.html">
+                    <li><a class="dropdown-item" href="../../pages/pricing/pricing-column.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing column</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/pricing/pricing-grid.html">
+                    <li><a class="dropdown-item" href="../../pages/pricing/pricing-grid.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing grid</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../pages/notifications.html">
+                <li><a class="dropdown-item" href="../../pages/notifications.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../pages/members.html">
+                <li><a class="dropdown-item" href="../../pages/members.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../pages/timeline.html">
+                <li><a class="dropdown-item" href="../../pages/timeline.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clock"></span>Timeline</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="errors" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="alert-triangle"></span>Errors</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/errors/404.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/404.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>404</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/errors/403.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/403.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>403</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/errors/500.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/500.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>500</div>
                       </a></li>
                   </ul>
@@ -1226,26 +1211,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
             </li>
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-document-layout-right"></span>Documentation</a>
               <ul class="dropdown-menu navbar-dropdown-caret">
-                <li><a class="dropdown-item" href="../../../documentation/getting-started.html">
+                <li><a class="dropdown-item" href="../../documentation/getting-started.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="life-buoy"></span>Getting started</div>
                   </a></li>
                 <li class="dropdown dropdown-inside"><a class="dropdown-item dropdown-toggle" id="customization" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="settings"></span>Customization</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../documentation/customization/configuration.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/configuration.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Configuration</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/styling.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/styling.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Styling</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/color.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/color.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Color</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/dark-mode.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/dark-mode.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dark mode</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/plugin.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/plugin.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Plugin</div>
                       </a></li>
                   </ul>
@@ -1254,30 +1239,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="table"></span>Layouts doc</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/vertical-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/vertical-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Vertical navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/horizontal-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/horizontal-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Horizontal navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/combo-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/combo-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Combo navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/dual-nav.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/dual-nav.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dual nav</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../documentation/gulp.html">
+                <li><a class="dropdown-item" href="../../documentation/gulp.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 fa-brands fa-gulp ms-1 me-1 fa-lg"></span>Gulp</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../documentation/design-file.html">
+                <li><a class="dropdown-item" href="../../documentation/design-file.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="figma"></span>Design file</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../changelog.html">
+                <li><a class="dropdown-item" href="../../changelog.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="git-merge"></span>Changelog</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../showcase.html">
+                <li><a class="dropdown-item" href="../../showcase.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="monitor"></span>Showcase</div>
                   </a></li>
               </ul>
@@ -1303,7 +1288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative read border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/30-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/30-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">10m</span></p>
@@ -1335,7 +1320,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">1h</span></p>
@@ -1350,7 +1335,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/57-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/57-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Kiera Anderson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -1365,7 +1350,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/59-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/59-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Herman Carter</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👤</span>Tagged you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -1380,7 +1365,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative read ">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/58-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/58-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Benjamin Button</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -1395,7 +1380,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                 </div>
                 <div class="card-footer p-0 border-top border-translucent border-0">
-                  <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../../pages/notifications.html">Notification history</a></div>
+                  <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../pages/notifications.html">Notification history</a></div>
                 </div>
               </div>
             </div>
@@ -1416,46 +1401,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
               <div class="card bg-body-emphasis position-relative border-0">
                 <div class="card-body pt-3 px-3 pb-0 overflow-auto scrollbar" style="height: 20rem;">
                   <div class="row text-center align-items-center gx-0 gy-0">
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Behance</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Cloud</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Slack</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Gitlab</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">BitBucket</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Drive</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Trello</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Figma</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Twitter</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Pinterest</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Linkedin</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Maps</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Photos</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Spotify</p>
                       </a></div>
                   </div>
@@ -1465,7 +1450,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
           </li>
           <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
               <div class="avatar avatar-l ">
-                <img class="rounded-circle " src="../../../assets/img/team/40x40/57-1.webp" alt="">
+                <img class="rounded-circle " src="../../assets/img/team/40x40/57-1.webp" alt="">
               </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border" aria-labelledby="navbarDropdownUser">
@@ -1473,7 +1458,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <div class="card-body p-0">
                   <div class="text-center pt-4 pb-3">
                     <div class="avatar avatar-xl ">
-                      <img class="rounded-circle " src="../../../assets/img/team/72x72/57-1.webp" alt="">
+                      <img class="rounded-circle " src="../../assets/img/team/72x72/57-1.webp" alt="">
                     </div>
                     <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
                   </div>
@@ -1523,7 +1508,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <li><a class="dropdown-item" href="travel-agency.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../apps/social/feed.html">
+                <li><a class="dropdown-item" href="../../apps/social/feed.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="share-2"></span>Social feed</div>
                   </a></li>
               </ul>
@@ -1538,25 +1523,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/add-product.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/add-product.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add product</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/products.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/products.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customers.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customers.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customers</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customer-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customer-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customer details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/orders.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/orders.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Orders</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/order-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/order-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/refund.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/refund.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Refund</div>
                           </a></li>
                       </ul>
@@ -1565,37 +1550,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/products-filter.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/products-filter.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products filter</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/cart.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/cart.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Cart</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/checkout.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/checkout.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/shipping-info.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/shipping-info.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Shipping info</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/profile.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/profile.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/favourite-stores.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/favourite-stores.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Favourite stores</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/wishlist.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/wishlist.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Wishlist</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/order-tracking.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/order-tracking.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order tracking</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/invoice.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/invoice.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Invoice</div>
                           </a></li>
                       </ul>
@@ -1606,28 +1591,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="phone"></span>CRM</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/crm/analytics.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/analytics.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Analytics</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/deals.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/deals.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deals</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/deal-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/deal-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deal details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/leads.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/leads.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Leads</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/lead-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/lead-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Lead details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/reports.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/reports.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Reports</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/report-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/report-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Report details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/add-contact.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/add-contact.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add contact</div>
                       </a></li>
                   </ul>
@@ -1636,22 +1621,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="clipboard"></span>Project management</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/project-management/create-new.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/create-new.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create new</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-list-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-list-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project list view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-card-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-card-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project card view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-board-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-board-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project board view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/todo-list.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/todo-list.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Todo list</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-details.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project details</div>
                       </a></li>
                   </ul>
@@ -1660,7 +1645,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/travel-agency/landing.html">
+                    <li><a class="dropdown-item" href="../../apps/travel-agency/landing.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Landing</div>
                       </a></li>
                     <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="hotel" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
@@ -1671,16 +1656,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                             <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-property.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-property.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add property</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-room.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-room.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add room</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-listing.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-listing.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Room listing</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-search.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-search.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Search room</div>
                               </a></li>
                           </ul>
@@ -1689,22 +1674,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                             <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/homepage.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/homepage.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-details.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-details.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel details</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-compare.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-compare.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel compare</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/checkout.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/checkout.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/payment.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/payment.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/gallery.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/gallery.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Gallery</div>
                               </a></li>
                           </ul>
@@ -1715,13 +1700,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Flight</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/booking.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/booking.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Booking</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/payment.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/payment.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                           </a></li>
                       </ul>
@@ -1730,33 +1715,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Trip</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/trip-details.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/trip-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Trip details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/checkout.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/checkout.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                           </a></li>
                       </ul>
                     </li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../apps/chat.html">
+                <li><a class="dropdown-item" href="../../apps/chat.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="message-square"></span>Chat</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="email" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="mail"></span>Email</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/email/inbox.html">
+                    <li><a class="dropdown-item" href="../../apps/email/inbox.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Inbox</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/email/email-detail.html">
+                    <li><a class="dropdown-item" href="../../apps/email/email-detail.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Email detail</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/email/compose.html">
+                    <li><a class="dropdown-item" href="../../apps/email/compose.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Compose</div>
                       </a></li>
                   </ul>
@@ -1765,10 +1750,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="bookmark"></span>Events</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/events/create-an-event.html">
+                    <li><a class="dropdown-item" href="../../apps/events/create-an-event.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create an event</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/events/event-detail.html">
+                    <li><a class="dropdown-item" href="../../apps/events/event-detail.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Event detail</div>
                       </a></li>
                   </ul>
@@ -1777,13 +1762,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="trello"></span>Kanban</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/kanban/kanban.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/kanban.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Kanban</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/kanban/boards.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/boards.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Boards</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/kanban/create-kanban-board.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/create-kanban-board.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create board</div>
                       </a></li>
                   </ul>
@@ -1792,32 +1777,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="share-2"></span>Social</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/social/profile.html">
+                    <li><a class="dropdown-item" href="../../apps/social/profile.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/social/settings.html">
+                    <li><a class="dropdown-item" href="../../apps/social/settings.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Settings</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../apps/calendar.html">
+                <li><a class="dropdown-item" href="../../apps/calendar.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="calendar"></span>Calendar</div>
                   </a></li>
               </ul>
             </li>
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-files-landscapes-alt"></span>Pages</a>
               <ul class="dropdown-menu navbar-dropdown-caret">
-                <li><a class="dropdown-item" href="../../../pages/starter.html">
+                <li><a class="dropdown-item" href="../../pages/starter.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="compass"></span>Starter</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="faq" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="help-circle"></span>Faq</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/faq/faq-accordion.html">
+                    <li><a class="dropdown-item" href="../../pages/faq/faq-accordion.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq accordion</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/faq/faq-tab.html">
+                    <li><a class="dropdown-item" href="../../pages/faq/faq-tab.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq tab</div>
                       </a></li>
                   </ul>
@@ -1826,10 +1811,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="globe"></span>Landing</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/landing/default.html">
+                    <li><a class="dropdown-item" href="../../pages/landing/default.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Default</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/landing/alternate.html">
+                    <li><a class="dropdown-item" href="../../pages/landing/alternate.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Alternate</div>
                       </a></li>
                   </ul>
@@ -1838,34 +1823,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="tag"></span>Pricing</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/pricing/pricing-column.html">
+                    <li><a class="dropdown-item" href="../../pages/pricing/pricing-column.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing column</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/pricing/pricing-grid.html">
+                    <li><a class="dropdown-item" href="../../pages/pricing/pricing-grid.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing grid</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../pages/notifications.html">
+                <li><a class="dropdown-item" href="../../pages/notifications.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../pages/members.html">
+                <li><a class="dropdown-item" href="../../pages/members.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../pages/timeline.html">
+                <li><a class="dropdown-item" href="../../pages/timeline.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clock"></span>Timeline</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="errors" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="alert-triangle"></span>Errors</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/errors/404.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/404.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>404</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/errors/403.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/403.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>403</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/errors/500.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/500.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>500</div>
                       </a></li>
                   </ul>
@@ -2031,26 +2016,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
             </li>
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-document-layout-right"></span>Documentation</a>
               <ul class="dropdown-menu navbar-dropdown-caret">
-                <li><a class="dropdown-item" href="../../../documentation/getting-started.html">
+                <li><a class="dropdown-item" href="../../documentation/getting-started.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="life-buoy"></span>Getting started</div>
                   </a></li>
                 <li class="dropdown dropdown-inside"><a class="dropdown-item dropdown-toggle" id="customization" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="settings"></span>Customization</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../documentation/customization/configuration.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/configuration.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Configuration</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/styling.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/styling.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Styling</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/color.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/color.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Color</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/dark-mode.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/dark-mode.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dark mode</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/plugin.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/plugin.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Plugin</div>
                       </a></li>
                   </ul>
@@ -2059,30 +2044,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="table"></span>Layouts doc</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/vertical-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/vertical-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Vertical navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/horizontal-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/horizontal-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Horizontal navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/combo-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/combo-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Combo navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/dual-nav.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/dual-nav.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dual nav</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../documentation/gulp.html">
+                <li><a class="dropdown-item" href="../../documentation/gulp.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 fa-brands fa-gulp ms-1 me-1 fa-lg"></span>Gulp</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../documentation/design-file.html">
+                <li><a class="dropdown-item" href="../../documentation/design-file.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="figma"></span>Design file</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../changelog.html">
+                <li><a class="dropdown-item" href="../../changelog.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="git-merge"></span>Changelog</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../showcase.html">
+                <li><a class="dropdown-item" href="../../showcase.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="monitor"></span>Showcase</div>
                   </a></li>
               </ul>
@@ -2108,7 +2093,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative read border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/30-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/30-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">10m</span></p>
@@ -2140,7 +2125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">1h</span></p>
@@ -2155,7 +2140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/57-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/57-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Kiera Anderson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -2170,7 +2155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/59-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/59-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Herman Carter</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👤</span>Tagged you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -2185,7 +2170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative read ">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/58-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/58-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Benjamin Button</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -2200,7 +2185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                 </div>
                 <div class="card-footer p-0 border-top border-translucent border-0">
-                  <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../../pages/notifications.html">Notification history</a></div>
+                  <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../pages/notifications.html">Notification history</a></div>
                 </div>
               </div>
             </div>
@@ -2221,46 +2206,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
               <div class="card bg-body-emphasis position-relative border-0">
                 <div class="card-body pt-3 px-3 pb-0 overflow-auto scrollbar" style="height: 20rem;">
                   <div class="row text-center align-items-center gx-0 gy-0">
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Behance</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Cloud</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Slack</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Gitlab</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">BitBucket</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Drive</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Trello</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Figma</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Twitter</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Pinterest</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Linkedin</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Maps</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Photos</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Spotify</p>
                       </a></div>
                   </div>
@@ -2274,7 +2259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <div class="card-body p-0">
                   <div class="text-center pt-4 pb-3">
                     <div class="avatar avatar-xl ">
-                      <img class="rounded-circle " src="../../../assets/img/team/72x72/57-1.webp" alt="">
+                      <img class="rounded-circle " src="../../assets/img/team/72x72/57-1.webp" alt="">
                     </div>
                     <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
                   </div>
@@ -2308,7 +2293,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
           <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
           <a class="navbar-brand me-1 me-sm-3" href="../index-1.html">
             <div class="d-flex align-items-center">
-              <div class="d-flex align-items-center"><img src="../../../assets/img/icons/logo-1.png" alt="phoenix" width="27">
+              <div class="d-flex align-items-center"><img src="../../assets/img/icons/logo-1.png" alt="phoenix" width="27">
                 <h5 class="logo-text ms-2 d-none d-sm-block">phoenix</h5>
               </div>
             </div>
@@ -2330,7 +2315,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <li><a class="dropdown-item" href="travel-agency.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../apps/social/feed.html">
+                <li><a class="dropdown-item" href="../../apps/social/feed.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="share-2"></span>Social feed</div>
                   </a></li>
               </ul>
@@ -2345,25 +2330,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/add-product.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/add-product.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add product</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/products.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/products.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customers.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customers.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customers</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customer-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customer-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customer details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/orders.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/orders.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Orders</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/order-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/order-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/refund.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/refund.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Refund</div>
                           </a></li>
                       </ul>
@@ -2372,37 +2357,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/products-filter.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/products-filter.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products filter</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/cart.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/cart.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Cart</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/checkout.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/checkout.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/shipping-info.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/shipping-info.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Shipping info</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/profile.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/profile.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/favourite-stores.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/favourite-stores.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Favourite stores</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/wishlist.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/wishlist.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Wishlist</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/order-tracking.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/order-tracking.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order tracking</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/invoice.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/invoice.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Invoice</div>
                           </a></li>
                       </ul>
@@ -2413,28 +2398,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="phone"></span>CRM</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/crm/analytics.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/analytics.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Analytics</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/deals.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/deals.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deals</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/deal-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/deal-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deal details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/leads.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/leads.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Leads</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/lead-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/lead-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Lead details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/reports.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/reports.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Reports</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/report-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/report-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Report details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/add-contact.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/add-contact.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add contact</div>
                       </a></li>
                   </ul>
@@ -2443,22 +2428,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="clipboard"></span>Project management</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/project-management/create-new.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/create-new.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create new</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-list-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-list-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project list view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-card-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-card-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project card view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-board-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-board-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project board view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/todo-list.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/todo-list.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Todo list</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-details.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project details</div>
                       </a></li>
                   </ul>
@@ -2467,7 +2452,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/travel-agency/landing.html">
+                    <li><a class="dropdown-item" href="../../apps/travel-agency/landing.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Landing</div>
                       </a></li>
                     <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="hotel" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
@@ -2478,16 +2463,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                             <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-property.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-property.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add property</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-room.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-room.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add room</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-listing.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-listing.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Room listing</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-search.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-search.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Search room</div>
                               </a></li>
                           </ul>
@@ -2496,22 +2481,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                             <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/homepage.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/homepage.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-details.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-details.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel details</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-compare.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-compare.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel compare</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/checkout.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/checkout.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/payment.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/payment.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/gallery.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/gallery.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Gallery</div>
                               </a></li>
                           </ul>
@@ -2522,13 +2507,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Flight</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/booking.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/booking.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Booking</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/payment.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/payment.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                           </a></li>
                       </ul>
@@ -2537,33 +2522,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Trip</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/trip-details.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/trip-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Trip details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/checkout.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/checkout.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                           </a></li>
                       </ul>
                     </li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../apps/chat.html">
+                <li><a class="dropdown-item" href="../../apps/chat.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="message-square"></span>Chat</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="email" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="mail"></span>Email</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/email/inbox.html">
+                    <li><a class="dropdown-item" href="../../apps/email/inbox.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Inbox</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/email/email-detail.html">
+                    <li><a class="dropdown-item" href="../../apps/email/email-detail.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Email detail</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/email/compose.html">
+                    <li><a class="dropdown-item" href="../../apps/email/compose.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Compose</div>
                       </a></li>
                   </ul>
@@ -2572,10 +2557,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="bookmark"></span>Events</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/events/create-an-event.html">
+                    <li><a class="dropdown-item" href="../../apps/events/create-an-event.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create an event</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/events/event-detail.html">
+                    <li><a class="dropdown-item" href="../../apps/events/event-detail.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Event detail</div>
                       </a></li>
                   </ul>
@@ -2584,13 +2569,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="trello"></span>Kanban</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/kanban/kanban.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/kanban.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Kanban</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/kanban/boards.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/boards.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Boards</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/kanban/create-kanban-board.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/create-kanban-board.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create board</div>
                       </a></li>
                   </ul>
@@ -2599,32 +2584,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="share-2"></span>Social</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/social/profile.html">
+                    <li><a class="dropdown-item" href="../../apps/social/profile.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/social/settings.html">
+                    <li><a class="dropdown-item" href="../../apps/social/settings.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Settings</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../apps/calendar.html">
+                <li><a class="dropdown-item" href="../../apps/calendar.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="calendar"></span>Calendar</div>
                   </a></li>
               </ul>
             </li>
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-files-landscapes-alt"></span>Pages</a>
               <ul class="dropdown-menu navbar-dropdown-caret">
-                <li><a class="dropdown-item" href="../../../pages/starter.html">
+                <li><a class="dropdown-item" href="../../pages/starter.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="compass"></span>Starter</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="faq" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="help-circle"></span>Faq</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/faq/faq-accordion.html">
+                    <li><a class="dropdown-item" href="../../pages/faq/faq-accordion.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq accordion</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/faq/faq-tab.html">
+                    <li><a class="dropdown-item" href="../../pages/faq/faq-tab.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq tab</div>
                       </a></li>
                   </ul>
@@ -2633,10 +2618,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="globe"></span>Landing</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/landing/default.html">
+                    <li><a class="dropdown-item" href="../../pages/landing/default.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Default</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/landing/alternate.html">
+                    <li><a class="dropdown-item" href="../../pages/landing/alternate.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Alternate</div>
                       </a></li>
                   </ul>
@@ -2645,34 +2630,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="tag"></span>Pricing</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/pricing/pricing-column.html">
+                    <li><a class="dropdown-item" href="../../pages/pricing/pricing-column.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing column</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/pricing/pricing-grid.html">
+                    <li><a class="dropdown-item" href="../../pages/pricing/pricing-grid.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing grid</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../pages/notifications.html">
+                <li><a class="dropdown-item" href="../../pages/notifications.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../pages/members.html">
+                <li><a class="dropdown-item" href="../../pages/members.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../pages/timeline.html">
+                <li><a class="dropdown-item" href="../../pages/timeline.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clock"></span>Timeline</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="errors" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="alert-triangle"></span>Errors</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/errors/404.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/404.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>404</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/errors/403.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/403.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>403</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/errors/500.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/500.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>500</div>
                       </a></li>
                   </ul>
@@ -2838,26 +2823,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
             </li>
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-document-layout-right"></span>Documentation</a>
               <ul class="dropdown-menu navbar-dropdown-caret">
-                <li><a class="dropdown-item" href="../../../documentation/getting-started.html">
+                <li><a class="dropdown-item" href="../../documentation/getting-started.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="life-buoy"></span>Getting started</div>
                   </a></li>
                 <li class="dropdown dropdown-inside"><a class="dropdown-item dropdown-toggle" id="customization" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="settings"></span>Customization</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../documentation/customization/configuration.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/configuration.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Configuration</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/styling.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/styling.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Styling</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/color.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/color.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Color</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/dark-mode.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/dark-mode.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dark mode</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/plugin.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/plugin.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Plugin</div>
                       </a></li>
                   </ul>
@@ -2866,30 +2851,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="table"></span>Layouts doc</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/vertical-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/vertical-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Vertical navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/horizontal-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/horizontal-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Horizontal navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/combo-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/combo-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Combo navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/dual-nav.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/dual-nav.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dual nav</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../documentation/gulp.html">
+                <li><a class="dropdown-item" href="../../documentation/gulp.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 fa-brands fa-gulp ms-1 me-1 fa-lg"></span>Gulp</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../documentation/design-file.html">
+                <li><a class="dropdown-item" href="../../documentation/design-file.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="figma"></span>Design file</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../changelog.html">
+                <li><a class="dropdown-item" href="../../changelog.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="git-merge"></span>Changelog</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../showcase.html">
+                <li><a class="dropdown-item" href="../../showcase.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="monitor"></span>Showcase</div>
                   </a></li>
               </ul>
@@ -2915,7 +2900,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative read border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/30-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/30-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">10m</span></p>
@@ -2947,7 +2932,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">1h</span></p>
@@ -2962,7 +2947,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/57-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/57-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Kiera Anderson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -2977,7 +2962,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/59-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/59-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Herman Carter</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👤</span>Tagged you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -2992,7 +2977,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative read ">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/58-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/58-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Benjamin Button</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -3007,7 +2992,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                 </div>
                 <div class="card-footer p-0 border-top border-translucent border-0">
-                  <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../../pages/notifications.html">Notification history</a></div>
+                  <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../pages/notifications.html">Notification history</a></div>
                 </div>
               </div>
             </div>
@@ -3028,46 +3013,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
               <div class="card bg-body-emphasis position-relative border-0">
                 <div class="card-body pt-3 px-3 pb-0 overflow-auto scrollbar" style="height: 20rem;">
                   <div class="row text-center align-items-center gx-0 gy-0">
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Behance</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Cloud</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Slack</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Gitlab</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">BitBucket</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Drive</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Trello</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Figma</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Twitter</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Pinterest</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Linkedin</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Maps</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Photos</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Spotify</p>
                       </a></div>
                   </div>
@@ -3077,7 +3062,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
           </li>
           <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
               <div class="avatar avatar-l ">
-                <img class="rounded-circle " src="../../../assets/img/team/40x40/57-1.webp" alt="">
+                <img class="rounded-circle " src="../../assets/img/team/40x40/57-1.webp" alt="">
               </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border" aria-labelledby="navbarDropdownUser">
@@ -3085,7 +3070,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <div class="card-body p-0">
                   <div class="text-center pt-4 pb-3">
                     <div class="avatar avatar-xl ">
-                      <img class="rounded-circle " src="../../../assets/img/team/72x72/57-1.webp" alt="">
+                      <img class="rounded-circle " src="../../assets/img/team/72x72/57-1.webp" alt="">
                     </div>
                     <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
                   </div>
@@ -3135,7 +3120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <li><a class="dropdown-item" href="travel-agency.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../apps/social/feed.html">
+                <li><a class="dropdown-item" href="../../apps/social/feed.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="share-2"></span>Social feed</div>
                   </a></li>
               </ul>
@@ -3150,25 +3135,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/add-product.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/add-product.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add product</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/products.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/products.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customers.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customers.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customers</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customer-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customer-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customer details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/orders.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/orders.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Orders</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/order-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/order-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/refund.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/admin/refund.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Refund</div>
                           </a></li>
                       </ul>
@@ -3177,37 +3162,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/products-filter.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/products-filter.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products filter</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/cart.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/cart.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Cart</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/checkout.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/checkout.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/shipping-info.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/shipping-info.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Shipping info</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/profile.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/profile.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/favourite-stores.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/favourite-stores.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Favourite stores</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/wishlist.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/wishlist.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Wishlist</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/order-tracking.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/order-tracking.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order tracking</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/invoice.html">
+                        <li><a class="dropdown-item" href="../../apps/e-commerce/landing/invoice.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Invoice</div>
                           </a></li>
                       </ul>
@@ -3218,28 +3203,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="phone"></span>CRM</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/crm/analytics.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/analytics.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Analytics</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/deals.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/deals.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deals</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/deal-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/deal-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deal details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/leads.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/leads.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Leads</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/lead-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/lead-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Lead details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/reports.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/reports.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Reports</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/report-details.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/report-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Report details</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/crm/add-contact.html">
+                    <li><a class="dropdown-item" href="../../apps/crm/add-contact.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add contact</div>
                       </a></li>
                   </ul>
@@ -3248,22 +3233,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="clipboard"></span>Project management</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/project-management/create-new.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/create-new.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create new</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-list-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-list-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project list view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-card-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-card-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project card view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-board-view.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-board-view.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project board view</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/todo-list.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/todo-list.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Todo list</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/project-management/project-details.html">
+                    <li><a class="dropdown-item" href="../../apps/project-management/project-details.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project details</div>
                       </a></li>
                   </ul>
@@ -3272,7 +3257,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/travel-agency/landing.html">
+                    <li><a class="dropdown-item" href="../../apps/travel-agency/landing.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Landing</div>
                       </a></li>
                     <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="hotel" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
@@ -3283,16 +3268,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                             <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-property.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-property.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add property</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-room.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-room.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add room</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-listing.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-listing.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Room listing</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-search.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-search.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Search room</div>
                               </a></li>
                           </ul>
@@ -3301,22 +3286,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                             <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                           </a>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/homepage.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/homepage.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-details.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-details.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel details</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-compare.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-compare.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel compare</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/checkout.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/checkout.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/payment.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/payment.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                               </a></li>
-                            <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/gallery.html">
+                            <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/gallery.html">
                                 <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Gallery</div>
                               </a></li>
                           </ul>
@@ -3327,13 +3312,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Flight</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/booking.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/booking.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Booking</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/payment.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/flight/payment.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                           </a></li>
                       </ul>
@@ -3342,33 +3327,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Trip</span></div>
                       </a>
                       <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/homepage.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/homepage.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/trip-details.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/trip-details.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Trip details</div>
                           </a></li>
-                        <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/checkout.html">
+                        <li><a class="dropdown-item" href="../../apps/travel-agency/trip/checkout.html">
                             <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                           </a></li>
                       </ul>
                     </li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../apps/chat.html">
+                <li><a class="dropdown-item" href="../../apps/chat.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="message-square"></span>Chat</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="email" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="mail"></span>Email</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/email/inbox.html">
+                    <li><a class="dropdown-item" href="../../apps/email/inbox.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Inbox</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/email/email-detail.html">
+                    <li><a class="dropdown-item" href="../../apps/email/email-detail.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Email detail</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/email/compose.html">
+                    <li><a class="dropdown-item" href="../../apps/email/compose.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Compose</div>
                       </a></li>
                   </ul>
@@ -3377,10 +3362,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="bookmark"></span>Events</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/events/create-an-event.html">
+                    <li><a class="dropdown-item" href="../../apps/events/create-an-event.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create an event</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/events/event-detail.html">
+                    <li><a class="dropdown-item" href="../../apps/events/event-detail.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Event detail</div>
                       </a></li>
                   </ul>
@@ -3389,13 +3374,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="trello"></span>Kanban</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/kanban/kanban.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/kanban.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Kanban</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/kanban/boards.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/boards.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Boards</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/kanban/create-kanban-board.html">
+                    <li><a class="dropdown-item" href="../../apps/kanban/create-kanban-board.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create board</div>
                       </a></li>
                   </ul>
@@ -3404,32 +3389,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="share-2"></span>Social</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../apps/social/profile.html">
+                    <li><a class="dropdown-item" href="../../apps/social/profile.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../apps/social/settings.html">
+                    <li><a class="dropdown-item" href="../../apps/social/settings.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Settings</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../apps/calendar.html">
+                <li><a class="dropdown-item" href="../../apps/calendar.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="calendar"></span>Calendar</div>
                   </a></li>
               </ul>
             </li>
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-files-landscapes-alt"></span>Pages</a>
               <ul class="dropdown-menu navbar-dropdown-caret">
-                <li><a class="dropdown-item" href="../../../pages/starter.html">
+                <li><a class="dropdown-item" href="../../pages/starter.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="compass"></span>Starter</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="faq" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="help-circle"></span>Faq</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/faq/faq-accordion.html">
+                    <li><a class="dropdown-item" href="../../pages/faq/faq-accordion.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq accordion</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/faq/faq-tab.html">
+                    <li><a class="dropdown-item" href="../../pages/faq/faq-tab.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq tab</div>
                       </a></li>
                   </ul>
@@ -3438,10 +3423,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="globe"></span>Landing</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/landing/default.html">
+                    <li><a class="dropdown-item" href="../../pages/landing/default.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Default</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/landing/alternate.html">
+                    <li><a class="dropdown-item" href="../../pages/landing/alternate.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Alternate</div>
                       </a></li>
                   </ul>
@@ -3450,34 +3435,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="tag"></span>Pricing</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/pricing/pricing-column.html">
+                    <li><a class="dropdown-item" href="../../pages/pricing/pricing-column.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing column</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/pricing/pricing-grid.html">
+                    <li><a class="dropdown-item" href="../../pages/pricing/pricing-grid.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing grid</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../pages/notifications.html">
+                <li><a class="dropdown-item" href="../../pages/notifications.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../pages/members.html">
+                <li><a class="dropdown-item" href="../../pages/members.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../pages/timeline.html">
+                <li><a class="dropdown-item" href="../../pages/timeline.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clock"></span>Timeline</div>
                   </a></li>
                 <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="errors" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="alert-triangle"></span>Errors</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../pages/errors/404.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/404.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>404</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/errors/403.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/403.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>403</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../pages/errors/500.html">
+                    <li><a class="dropdown-item" href="../../pages/errors/500.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>500</div>
                       </a></li>
                   </ul>
@@ -3643,26 +3628,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
             </li>
             <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-document-layout-right"></span>Documentation</a>
               <ul class="dropdown-menu navbar-dropdown-caret">
-                <li><a class="dropdown-item" href="../../../documentation/getting-started.html">
+                <li><a class="dropdown-item" href="../../documentation/getting-started.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="life-buoy"></span>Getting started</div>
                   </a></li>
                 <li class="dropdown dropdown-inside"><a class="dropdown-item dropdown-toggle" id="customization" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="settings"></span>Customization</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../documentation/customization/configuration.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/configuration.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Configuration</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/styling.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/styling.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Styling</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/color.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/color.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Color</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/dark-mode.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/dark-mode.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dark mode</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/customization/plugin.html">
+                    <li><a class="dropdown-item" href="../../documentation/customization/plugin.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Plugin</div>
                       </a></li>
                   </ul>
@@ -3671,30 +3656,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="table"></span>Layouts doc</span></div>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/vertical-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/vertical-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Vertical navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/horizontal-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/horizontal-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Horizontal navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/combo-navbar.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/combo-navbar.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Combo navbar</div>
                       </a></li>
-                    <li><a class="dropdown-item" href="../../../documentation/layouts/dual-nav.html">
+                    <li><a class="dropdown-item" href="../../documentation/layouts/dual-nav.html">
                         <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dual nav</div>
                       </a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item" href="../../../documentation/gulp.html">
+                <li><a class="dropdown-item" href="../../documentation/gulp.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 fa-brands fa-gulp ms-1 me-1 fa-lg"></span>Gulp</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../documentation/design-file.html">
+                <li><a class="dropdown-item" href="../../documentation/design-file.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="figma"></span>Design file</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../changelog.html">
+                <li><a class="dropdown-item" href="../../changelog.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="git-merge"></span>Changelog</div>
                   </a></li>
-                <li><a class="dropdown-item" href="../../../showcase.html">
+                <li><a class="dropdown-item" href="../../showcase.html">
                     <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="monitor"></span>Showcase</div>
                   </a></li>
               </ul>
@@ -3720,7 +3705,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative read border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/30-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/30-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">10m</span></p>
@@ -3752,7 +3737,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">1h</span></p>
@@ -3767,7 +3752,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/57-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/57-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Kiera Anderson</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -3782,7 +3767,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/59-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/59-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Herman Carter</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👤</span>Tagged you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -3797,7 +3782,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="px-2 px-sm-3 py-3 notification-card position-relative read ">
                       <div class="d-flex align-items-center justify-content-between position-relative">
                         <div class="d-flex">
-                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/58-1.webp" alt=""></div>
+                          <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/58-1.webp" alt=""></div>
                           <div class="flex-1 me-sm-3">
                             <h4 class="fs-9 text-body-emphasis">Benjamin Button</h4>
                             <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -3812,7 +3797,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   </div>
                 </div>
                 <div class="card-footer p-0 border-top border-translucent border-0">
-                  <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../../pages/notifications.html">Notification history</a></div>
+                  <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../pages/notifications.html">Notification history</a></div>
                 </div>
               </div>
             </div>
@@ -3833,46 +3818,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
               <div class="card bg-body-emphasis position-relative border-0">
                 <div class="card-body pt-3 px-3 pb-0 overflow-auto scrollbar" style="height: 20rem;">
                   <div class="row text-center align-items-center gx-0 gy-0">
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Behance</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Cloud</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Slack</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Gitlab</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">BitBucket</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Drive</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Trello</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Figma</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Twitter</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Pinterest</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Linkedin</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Maps</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Photos</p>
                       </a></div>
-                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
+                    <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
                         <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Spotify</p>
                       </a></div>
                   </div>
@@ -3886,7 +3871,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                 <div class="card-body p-0">
                   <div class="text-center pt-4 pb-3">
                     <div class="avatar avatar-xl ">
-                      <img class="rounded-circle " src="../../../assets/img/team/72x72/57-1.webp" alt="">
+                      <img class="rounded-circle " src="../../assets/img/team/72x72/57-1.webp" alt="">
                     </div>
                     <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
                   </div>
@@ -3922,7 +3907,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
               <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopCollapse" aria-controls="navbarTopCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
               <a class="navbar-brand me-1 me-sm-3" href="../index-1.html">
                 <div class="d-flex align-items-center">
-                  <div class="d-flex align-items-center"><img src="../../../assets/img/icons/logo-1.png" alt="phoenix" width="27">
+                  <div class="d-flex align-items-center"><img src="../../assets/img/icons/logo-1.png" alt="phoenix" width="27">
                     <h5 class="logo-text ms-2 d-none d-sm-block">Investmate</h5>
                   </div>
                 </div>
@@ -3939,12 +3924,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">results</span></h6>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Recently Searched </h6>
-                    <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <div class="py-2"><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                      <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
                         </div>
@@ -3952,15 +3937,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Products</h6>
-                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../../apps/e-commerce/landing/product-details.html">
-                        <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../../../assets/img/products/60x60/3-1.png" alt=""></div>
+                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../apps/e-commerce/landing/product-details.html">
+                        <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../../assets/img/products/60x60/3-1.png" alt=""></div>
                         <div class="flex-1">
                           <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
                           <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
                         </div>
                       </a>
-                      <a class="dropdown-item py-2 d-flex align-items-center" href="../../../apps/e-commerce/landing/product-details.html">
-                        <div class="file-thumbnail me-2"><img class="img-fluid" src="../../../assets/img/products/60x60/3-1.png" alt=""></div>
+                      <a class="dropdown-item py-2 d-flex align-items-center" href="../../apps/e-commerce/landing/product-details.html">
+                        <div class="file-thumbnail me-2"><img class="img-fluid" src="../../assets/img/products/60x60/3-1.png" alt=""></div>
                         <div class="flex-1">
                           <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
                           <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">30 Sep at 12:30 PM</span></p>
@@ -3969,12 +3954,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Quick Links</h6>
-                    <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <div class="py-2"><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Support MacBook House</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                      <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                         </div>
@@ -3982,17 +3967,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Files</h6>
-                    <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <div class="py-2"><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-file-zipper text-body" data-fa-transform="shrink-2"></span> Library MacBook folder.rar</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                      <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-file-lines text-body" data-fa-transform="shrink-2"></span> Feature MacBook extensions.txt</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                      <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-image text-body" data-fa-transform="shrink-2"></span> MacBook Pro_13.jpg</div>
                         </div>
@@ -4000,18 +3985,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Members</h6>
-                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../../pages/members.html">
+                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../pages/members.html">
                         <div class="avatar avatar-l status-online  me-2 text-body">
-                          <img class="rounded-circle " src="../../../assets/img/team/40x40/10-1.webp" alt="">
+                          <img class="rounded-circle " src="../../assets/img/team/40x40/10-1.webp" alt="">
                         </div>
                         <div class="flex-1">
                           <h6 class="mb-0 text-body-highlight title">Carry Anna</h6>
                           <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
                         </div>
                       </a>
-                      <a class="dropdown-item py-2 d-flex align-items-center" href="../../../pages/members.html">
+                      <a class="dropdown-item py-2 d-flex align-items-center" href="../../pages/members.html">
                         <div class="avatar avatar-l  me-2 text-body">
-                          <img class="rounded-circle " src="../../../assets/img/team/40x40/12-1.webp" alt="">
+                          <img class="rounded-circle " src="../../assets/img/team/40x40/12-1.webp" alt="">
                         </div>
                         <div class="flex-1">
                           <h6 class="mb-0 text-body-highlight title">John Smith</h6>
@@ -4021,12 +4006,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     </div>
                     <hr class="my-0">
                     <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Related Searches</h6>
-                    <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                    <div class="py-2"><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"><span class="fa-brands fa-firefox-browser text-body" data-fa-transform="shrink-2"></span> Search in the Web MacBook</div>
                         </div>
                       </a>
-                      <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                      <a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                         <div class="d-flex align-items-center">
                           <div class="fw-normal text-body-highlight title"> <span class="fa-brands fa-chrome text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
                         </div>
@@ -4057,7 +4042,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="px-2 px-sm-3 py-3 notification-card position-relative read border-bottom">
                           <div class="d-flex align-items-center justify-content-between position-relative">
                             <div class="d-flex">
-                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/30-1.webp" alt=""></div>
+                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/30-1.webp" alt=""></div>
                               <div class="flex-1 me-sm-3">
                                 <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                                 <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">10m</span></p>
@@ -4089,7 +4074,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                           <div class="d-flex align-items-center justify-content-between position-relative">
                             <div class="d-flex">
-                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
+                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle avatar-placeholder" src="../../assets/img/team/40x40/avatar-1.webp" alt=""></div>
                               <div class="flex-1 me-sm-3">
                                 <h4 class="fs-9 text-body-emphasis">Jessie Samson</h4>
                                 <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10">1h</span></p>
@@ -4104,7 +4089,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                           <div class="d-flex align-items-center justify-content-between position-relative">
                             <div class="d-flex">
-                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/57-1.webp" alt=""></div>
+                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/57-1.webp" alt=""></div>
                               <div class="flex-1 me-sm-3">
                                 <h4 class="fs-9 text-body-emphasis">Kiera Anderson</h4>
                                 <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>💬</span>Mentioned you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -4119,7 +4104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="px-2 px-sm-3 py-3 notification-card position-relative unread border-bottom">
                           <div class="d-flex align-items-center justify-content-between position-relative">
                             <div class="d-flex">
-                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/59-1.webp" alt=""></div>
+                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/59-1.webp" alt=""></div>
                               <div class="flex-1 me-sm-3">
                                 <h4 class="fs-9 text-body-emphasis">Herman Carter</h4>
                                 <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👤</span>Tagged you in a comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -4134,7 +4119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                         <div class="px-2 px-sm-3 py-3 notification-card position-relative read ">
                           <div class="d-flex align-items-center justify-content-between position-relative">
                             <div class="d-flex">
-                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../../assets/img/team/40x40/58-1.webp" alt=""></div>
+                              <div class="avatar avatar-m status-online me-3"><img class="rounded-circle" src="../../assets/img/team/40x40/58-1.webp" alt=""></div>
                               <div class="flex-1 me-sm-3">
                                 <h4 class="fs-9 text-body-emphasis">Benjamin Button</h4>
                                 <p class="fs-9 text-body-highlight mb-2 mb-sm-3 fw-normal"><span class='me-1 fs-10'>👍</span>Liked your comment.<span class="ms-2 text-body-quaternary text-opacity-75 fw-bold fs-10"></span></p>
@@ -4149,7 +4134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       </div>
                     </div>
                     <div class="card-footer p-0 border-top border-translucent border-0">
-                      <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../../pages/notifications.html">Notification history</a></div>
+                      <div class="my-2 text-center fw-bold fs-10 text-body-tertiary text-opactity-85"><a class="fw-bolder" href="../../pages/notifications.html">Notification history</a></div>
                     </div>
                   </div>
                 </div>
@@ -4170,46 +4155,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   <div class="card bg-body-emphasis position-relative border-0">
                     <div class="card-body pt-3 px-3 pb-0 overflow-auto scrollbar" style="height: 20rem;">
                       <div class="row text-center align-items-center gx-0 gy-0">
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/behance-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Behance</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-cloud-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Cloud</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/slack-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Slack</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/gitlab-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Gitlab</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/bitbucket-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">BitBucket</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-drive-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Drive</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/trello-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Trello</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/figma-1.webp" alt="" width="20">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Figma</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/twitter-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Twitter</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/pinterest-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Pinterest</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/ln-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Linkedin</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-maps-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Maps</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/google-photos-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Photos</p>
                           </a></div>
-                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
+                        <div class="col-4"><a class="d-block bg-body-secondary-hover p-2 rounded-3 text-center text-decoration-none mb-3" href="#!"><img src="../../assets/img/nav-icons/spotify-1.webp" alt="" width="30">
                             <p class="mb-0 text-body-emphasis text-truncate fs-10 mt-1 pt-1">Spotify</p>
                           </a></div>
                       </div>
@@ -4219,7 +4204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
               </li>
               <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
                   <div class="avatar avatar-l ">
-                    <img class="rounded-circle " src="../../../assets/img/team/40x40/57-1.webp" alt="">
+                    <img class="rounded-circle " src="../../assets/img/team/40x40/57-1.webp" alt="">
                   </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border" aria-labelledby="navbarDropdownUser">
@@ -4227,7 +4212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                     <div class="card-body p-0">
                       <div class="text-center pt-4 pb-3">
                         <div class="avatar avatar-xl ">
-                          <img class="rounded-circle " src="../../../assets/img/team/72x72/57-1.webp" alt="">
+                          <img class="rounded-circle " src="../../assets/img/team/72x72/57-1.webp" alt="">
                         </div>
                         <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
                       </div>
@@ -4272,7 +4257,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                   <li><a class="dropdown-item" href="travel-agency.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</div>
                     </a></li>
-                  <li><a class="dropdown-item" href="../../../apps/social/feed.html">
+                  <li><a class="dropdown-item" href="../../apps/social/feed.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="share-2"></span>Social feed</div>
                     </a></li>
                 </ul>
@@ -4287,25 +4272,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                           <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/add-product.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/admin/add-product.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add product</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/products.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/admin/products.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customers.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customers.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customers</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/customer-details.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/admin/customer-details.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Customer details</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/orders.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/admin/orders.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Orders</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/order-details.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/admin/order-details.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order details</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/admin/refund.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/admin/refund.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Refund</div>
                             </a></li>
                         </ul>
@@ -4314,37 +4299,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                           <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/homepage.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/homepage.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/product-details.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Product details</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/products-filter.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/products-filter.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Products filter</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/cart.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/cart.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Cart</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/checkout.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/checkout.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/shipping-info.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/shipping-info.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Shipping info</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/profile.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/profile.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/favourite-stores.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/favourite-stores.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Favourite stores</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/wishlist.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/wishlist.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Wishlist</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/order-tracking.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/order-tracking.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Order tracking</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/e-commerce/landing/invoice.html">
+                          <li><a class="dropdown-item" href="../../apps/e-commerce/landing/invoice.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Invoice</div>
                             </a></li>
                         </ul>
@@ -4355,28 +4340,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="phone"></span>CRM</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../apps/crm/analytics.html">
+                      <li><a class="dropdown-item" href="../../apps/crm/analytics.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Analytics</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/crm/deals.html">
+                      <li><a class="dropdown-item" href="../../apps/crm/deals.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deals</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/crm/deal-details.html">
+                      <li><a class="dropdown-item" href="../../apps/crm/deal-details.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Deal details</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/crm/leads.html">
+                      <li><a class="dropdown-item" href="../../apps/crm/leads.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Leads</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/crm/lead-details.html">
+                      <li><a class="dropdown-item" href="../../apps/crm/lead-details.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Lead details</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/crm/reports.html">
+                      <li><a class="dropdown-item" href="../../apps/crm/reports.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Reports</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/crm/report-details.html">
+                      <li><a class="dropdown-item" href="../../apps/crm/report-details.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Report details</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/crm/add-contact.html">
+                      <li><a class="dropdown-item" href="../../apps/crm/add-contact.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add contact</div>
                         </a></li>
                     </ul>
@@ -4385,22 +4370,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="clipboard"></span>Project management</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../apps/project-management/create-new.html">
+                      <li><a class="dropdown-item" href="../../apps/project-management/create-new.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create new</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/project-management/project-list-view.html">
+                      <li><a class="dropdown-item" href="../../apps/project-management/project-list-view.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project list view</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/project-management/project-card-view.html">
+                      <li><a class="dropdown-item" href="../../apps/project-management/project-card-view.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project card view</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/project-management/project-board-view.html">
+                      <li><a class="dropdown-item" href="../../apps/project-management/project-board-view.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project board view</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/project-management/todo-list.html">
+                      <li><a class="dropdown-item" href="../../apps/project-management/todo-list.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Todo list</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/project-management/project-details.html">
+                      <li><a class="dropdown-item" href="../../apps/project-management/project-details.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Project details</div>
                         </a></li>
                     </ul>
@@ -4409,7 +4394,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="briefcase"></span>Travel agency</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../apps/travel-agency/landing.html">
+                      <li><a class="dropdown-item" href="../../apps/travel-agency/landing.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Landing</div>
                         </a></li>
                       <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="hotel" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
@@ -4420,16 +4405,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                               <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Admin</span></div>
                             </a>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-property.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-property.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add property</div>
                                 </a></li>
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/add-room.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/add-room.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Add room</div>
                                 </a></li>
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-listing.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-listing.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Room listing</div>
                                 </a></li>
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/admin/room-search.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/admin/room-search.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Search room</div>
                                 </a></li>
                             </ul>
@@ -4438,22 +4423,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                               <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Customer</span></div>
                             </a>
                             <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/homepage.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/homepage.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                                 </a></li>
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-details.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-details.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel details</div>
                                 </a></li>
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/hotel-compare.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/hotel-compare.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Hotel compare</div>
                                 </a></li>
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/checkout.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/checkout.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                                 </a></li>
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/payment.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/payment.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                                 </a></li>
-                              <li><a class="dropdown-item" href="../../../apps/travel-agency/hotel/customer/gallery.html">
+                              <li><a class="dropdown-item" href="../../apps/travel-agency/hotel/customer/gallery.html">
                                   <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Gallery</div>
                                 </a></li>
                             </ul>
@@ -4464,13 +4449,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                           <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Flight</span></div>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/homepage.html">
+                          <li><a class="dropdown-item" href="../../apps/travel-agency/flight/homepage.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/booking.html">
+                          <li><a class="dropdown-item" href="../../apps/travel-agency/flight/booking.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Booking</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/travel-agency/flight/payment.html">
+                          <li><a class="dropdown-item" href="../../apps/travel-agency/flight/payment.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Payment</div>
                             </a></li>
                         </ul>
@@ -4479,33 +4464,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                           <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil"></span>Trip</span></div>
                         </a>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/homepage.html">
+                          <li><a class="dropdown-item" href="../../apps/travel-agency/trip/homepage.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Homepage</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/trip-details.html">
+                          <li><a class="dropdown-item" href="../../apps/travel-agency/trip/trip-details.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Trip details</div>
                             </a></li>
-                          <li><a class="dropdown-item" href="../../../apps/travel-agency/trip/checkout.html">
+                          <li><a class="dropdown-item" href="../../apps/travel-agency/trip/checkout.html">
                               <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Checkout</div>
                             </a></li>
                         </ul>
                       </li>
                     </ul>
                   </li>
-                  <li><a class="dropdown-item" href="../../../apps/chat.html">
+                  <li><a class="dropdown-item" href="../../apps/chat.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="message-square"></span>Chat</div>
                     </a></li>
                   <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="email" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="mail"></span>Email</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../apps/email/inbox.html">
+                      <li><a class="dropdown-item" href="../../apps/email/inbox.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Inbox</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/email/email-detail.html">
+                      <li><a class="dropdown-item" href="../../apps/email/email-detail.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Email detail</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/email/compose.html">
+                      <li><a class="dropdown-item" href="../../apps/email/compose.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Compose</div>
                         </a></li>
                     </ul>
@@ -4514,10 +4499,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="bookmark"></span>Events</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../apps/events/create-an-event.html">
+                      <li><a class="dropdown-item" href="../../apps/events/create-an-event.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create an event</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/events/event-detail.html">
+                      <li><a class="dropdown-item" href="../../apps/events/event-detail.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Event detail</div>
                         </a></li>
                     </ul>
@@ -4526,13 +4511,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="trello"></span>Kanban</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../apps/kanban/kanban.html">
+                      <li><a class="dropdown-item" href="../../apps/kanban/kanban.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Kanban</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/kanban/boards.html">
+                      <li><a class="dropdown-item" href="../../apps/kanban/boards.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Boards</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/kanban/create-kanban-board.html">
+                      <li><a class="dropdown-item" href="../../apps/kanban/create-kanban-board.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Create board</div>
                         </a></li>
                     </ul>
@@ -4541,32 +4526,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="share-2"></span>Social</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../apps/social/profile.html">
+                      <li><a class="dropdown-item" href="../../apps/social/profile.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Profile</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../apps/social/settings.html">
+                      <li><a class="dropdown-item" href="../../apps/social/settings.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Settings</div>
                         </a></li>
                     </ul>
                   </li>
-                  <li><a class="dropdown-item" href="../../../apps/calendar.html">
+                  <li><a class="dropdown-item" href="../../apps/calendar.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="calendar"></span>Calendar</div>
                     </a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-files-landscapes-alt"></span>Pages</a>
                 <ul class="dropdown-menu navbar-dropdown-caret">
-                  <li><a class="dropdown-item" href="../../../pages/starter.html">
+                  <li><a class="dropdown-item" href="../../pages/starter.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="compass"></span>Starter</div>
                     </a></li>
                   <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="faq" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="help-circle"></span>Faq</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../pages/faq/faq-accordion.html">
+                      <li><a class="dropdown-item" href="../../pages/faq/faq-accordion.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq accordion</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../pages/faq/faq-tab.html">
+                      <li><a class="dropdown-item" href="../../pages/faq/faq-tab.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Faq tab</div>
                         </a></li>
                     </ul>
@@ -4575,10 +4560,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="globe"></span>Landing</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../pages/landing/default.html">
+                      <li><a class="dropdown-item" href="../../pages/landing/default.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Default</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../pages/landing/alternate.html">
+                      <li><a class="dropdown-item" href="../../pages/landing/alternate.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Alternate</div>
                         </a></li>
                     </ul>
@@ -4587,34 +4572,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="tag"></span>Pricing</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../pages/pricing/pricing-column.html">
+                      <li><a class="dropdown-item" href="../../pages/pricing/pricing-column.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing column</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../pages/pricing/pricing-grid.html">
+                      <li><a class="dropdown-item" href="../../pages/pricing/pricing-grid.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Pricing grid</div>
                         </a></li>
                     </ul>
                   </li>
-                  <li><a class="dropdown-item" href="../../../pages/notifications.html">
+                  <li><a class="dropdown-item" href="../../pages/notifications.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="bell"></span>Notifications</div>
                     </a></li>
-                  <li><a class="dropdown-item" href="../../../pages/members.html">
+                  <li><a class="dropdown-item" href="../../pages/members.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="users"></span>Members</div>
                     </a></li>
-                  <li><a class="dropdown-item" href="../../../pages/timeline.html">
+                  <li><a class="dropdown-item" href="../../pages/timeline.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="clock"></span>Timeline</div>
                     </a></li>
                   <li class="dropdown"><a class="dropdown-item dropdown-toggle" id="errors" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="alert-triangle"></span>Errors</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../pages/errors/404.html">
+                      <li><a class="dropdown-item" href="../../pages/errors/404.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>404</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../pages/errors/403.html">
+                      <li><a class="dropdown-item" href="../../pages/errors/403.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>403</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../pages/errors/500.html">
+                      <li><a class="dropdown-item" href="../../pages/errors/500.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>500</div>
                         </a></li>
                     </ul>
@@ -4780,26 +4765,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
               </li>
               <li class="nav-item dropdown"><a class="nav-link dropdown-toggle lh-1" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false"><span class="uil fs-8 me-2 uil-document-layout-right"></span>Documentation</a>
                 <ul class="dropdown-menu navbar-dropdown-caret">
-                  <li><a class="dropdown-item" href="../../../documentation/getting-started.html">
+                  <li><a class="dropdown-item" href="../../documentation/getting-started.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="life-buoy"></span>Getting started</div>
                     </a></li>
                   <li class="dropdown dropdown-inside"><a class="dropdown-item dropdown-toggle" id="customization" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="settings"></span>Customization</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../documentation/customization/configuration.html">
+                      <li><a class="dropdown-item" href="../../documentation/customization/configuration.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Configuration</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../documentation/customization/styling.html">
+                      <li><a class="dropdown-item" href="../../documentation/customization/styling.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Styling</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../documentation/customization/color.html">
+                      <li><a class="dropdown-item" href="../../documentation/customization/color.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Color</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../documentation/customization/dark-mode.html">
+                      <li><a class="dropdown-item" href="../../documentation/customization/dark-mode.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dark mode</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../documentation/customization/plugin.html">
+                      <li><a class="dropdown-item" href="../../documentation/customization/plugin.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Plugin</div>
                         </a></li>
                     </ul>
@@ -4808,30 +4793,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                       <div class="dropdown-item-wrapper"><span class="uil fs-8 uil-angle-right lh-1 dropdown-indicator-icon"></span><span><span class="me-2 uil" data-feather="table"></span>Layouts doc</span></div>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="../../../documentation/layouts/vertical-navbar.html">
+                      <li><a class="dropdown-item" href="../../documentation/layouts/vertical-navbar.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Vertical navbar</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../documentation/layouts/horizontal-navbar.html">
+                      <li><a class="dropdown-item" href="../../documentation/layouts/horizontal-navbar.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Horizontal navbar</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../documentation/layouts/combo-navbar.html">
+                      <li><a class="dropdown-item" href="../../documentation/layouts/combo-navbar.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Combo navbar</div>
                         </a></li>
-                      <li><a class="dropdown-item" href="../../../documentation/layouts/dual-nav.html">
+                      <li><a class="dropdown-item" href="../../documentation/layouts/dual-nav.html">
                           <div class="dropdown-item-wrapper"><span class="me-2 uil"></span>Dual nav</div>
                         </a></li>
                     </ul>
                   </li>
-                  <li><a class="dropdown-item" href="../../../documentation/gulp.html">
+                  <li><a class="dropdown-item" href="../../documentation/gulp.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 fa-brands fa-gulp ms-1 me-1 fa-lg"></span>Gulp</div>
                     </a></li>
-                  <li><a class="dropdown-item" href="../../../documentation/design-file.html">
+                  <li><a class="dropdown-item" href="../../documentation/design-file.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="figma"></span>Design file</div>
                     </a></li>
-                  <li><a class="dropdown-item" href="../../../changelog.html">
+                  <li><a class="dropdown-item" href="../../changelog.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="git-merge"></span>Changelog</div>
                     </a></li>
-                  <li><a class="dropdown-item" href="../../../showcase.html">
+                  <li><a class="dropdown-item" href="../../showcase.html">
                       <div class="dropdown-item-wrapper"><span class="me-2 uil" data-feather="monitor"></span>Showcase</div>
                     </a></li>
                 </ul>
@@ -4942,231 +4927,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
       
 
       <div class="content">
-        <div class="row gy-3 mb-6 justify-content-between">
-          <div class="col-md-9 col-auto">
-            <h2 class="mb-2 text-body-emphasis">Edit New Blog</h2>
-          </div>
-          
+    <div class="row gy-3 mb-6 justify-content-between">
+        <div class="col-md-9 col-auto">
+            <h2 class="mb-2 text-body-emphasis">Add User</h2>
+            <?php
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Collect form data
+                $username = $_POST['username'];
+                $email = $_POST['email'];
+                $phone = $_POST['phone'];
+                $file = $_FILES['file_attachement'];
+                $user_id = 1;
+
+                try {
+                    createUser($username, $email, $phone, $file, $user_id);
+                    echo '<div class="alert alert-success alert-sm" role="alert">User created successfully.</div>';
+                } catch (Exception $e) {
+                    echo '<div class="alert alert-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
+                }
+            }
+
+            ?>
         </div>
-        
-        <form class="row g-3" action="index.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="update_blog_post" value="1">
-            <input type="hidden" name="user_id" value="1">
-            <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
+
+        <form class="row g-3" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
             <div class="col-md-10">
-              <label class="form-label" for="title">Title</label>
-              <input class="form-control" style="height: 50px;" value="<?php echo $post['title']; ?>" id="title" name="title" type="title" required placeholder="Enter your title">
+                <label class="form-label" for="username">Name</label>
+                <input class="form-control" name="username" id="username" type="text" style="height: 50px;" required placeholder="Enter your Name">
             </div>
-            <div class="col-md-5">
-                <label class="form-label" for="inputState">Category</label>
-                <select class="form-select" style="height: 50px;" id="category" name="category" required>
-                  <option >Choose...</option>
-                  <option value="Category 1" <?php echo ($post['category'] === 'Politics 1') ? 'selected' : ''; ?>>Politics</option>
-                  <option value="Category 2" <?php echo ($post['category'] === 'Business 2') ? 'selected' : ''; ?>>Business</option>
-                  <option value="Category 3" <?php echo ($post['category'] === 'Videos 3') ? 'selected' : ''; ?>>Video</option>
-                  <option selected="selected">Fashion</option>
-                  <option selected="selected">Sports</option>
-                  <option selected="selected">Tech</option>
-                  <option selected="selected">Life Style</option>
-
-                </select>
-              </div>
-              <div class="col-md-5">
-                <label class="form-label" for="caption">Caption</label>
-                <select class="form-select" id="caption" name="cation" value="<?php echo $post['caption']; ?>" style="height: 50px;" id="inputState" required>
-                  <option selected="selected">Choose...</option>
-                  <option selected="selected">Popular</option>
-                  <option selected="selected">Trending</option>
-                  <option selected="selected">Latest</option>
-                </select>
-              </div>
-
-              <div class="col-md-10 mb-3">
-                <label class="form-label" for="tag">Tags (comma-separated)</label>
-                <input class="form-control" type="text" name="tag" id="tage" value="<?php echo $post['tags']; ?>"  style="height: 50px;" required />
-              </div>
-           
+            <div class="col-md-10 mb-3">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" name="email" id="email" required style="height: 50px;" />
+            </div>
+            <div class="col-md-10">
+                <label class="form-label" for="phone">Phone</label>
+                <input class="form-control" type="number" name="phone" id="phone" required style="height: 50px;" />
+            </div>
             <div class="col-md-10 mb-3">
                 <label class="form-label" for="file_attachement">File Attachment</label>
-                <input class="form-control"  style="height: 50px;" type="file" id="file_attachement" name="file_attachement" required/>
-              </div>
-
-            <div class="col-md-10" >
-                <label class="form-label" for="content">Content</label>
-                <textarea id="content" name="content"><?php echo htmlspecialchars($post['content']); ?></textarea>
+                <input class="form-control" style="height: 50px;" type="file" id="file_attachement" name="file_attachement"/>
             </div>
-
-
             <div class="col-10 mb-3">
-              <button class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit">Post</button>
+                <input class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit" value="Add User" name="submit"/>
             </div>
-          </form>
-       
-      
+        </form>
+        
         <footer class="footer position-absolute">
-          <div class="row g-0 justify-content-between align-items-center h-100">
-            <div class="col-12 col-sm-auto text-center">
-              <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright ©
-                <span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span>
-                <br class="d-sm-none">InvestmateBlog 2024 <a class="mx-1" href="#" style="color: rgb(231, 54, 103)">. All Rights Reserved</a>
-              </p>
-
+            <div class="row g-0 justify-content-between align-items-center h-100">
+                <div class="col-12 col-sm-auto text-center">
+                    <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright ©
+                        <span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span>
+                        <br class="d-sm-none">InvestmateBlog 2024 <a class="mx-1" href="" style="color: rgb(231, 54, 103)">. All Rights Reserved</a>
+                    </p>
+                </div>
             </div>
-           
-          </div>
         </footer>
-      </div>
-      <div class="modal fade" id="searchBoxModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="true" data-phoenix-modal="data-phoenix-modal" style="--phoenix-backdrop-opacity: 1;">
-        <div class="modal-dialog">
-          <div class="modal-content mt-15 rounded-pill">
-            <div class="modal-body p-0">
-              <div class="search-box navbar-top-search-box" data-list='{"valueNames":["title"]}' style="width: auto;">
-                <form class="position-relative" data-bs-toggle="search" data-bs-display="static"><input class="form-control search-input fuzzy-search rounded-pill form-control-lg" type="search" placeholder="Search..." aria-label="Search">
-                  <span class="fas fa-search search-box-icon"></span>
-                </form>
-                <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search"><button class="btn btn-link p-0" aria-label="Close"></button></div>
-                <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
-                  <div class="scrollbar-overlay" style="max-height: 30rem;">
-                    <div class="list pb-3">
-                      <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">results</span></h6>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Recently Searched </h6>
-                      <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Products</h6>
-                      <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../../../assets/img/products/60x60/3-1.png" alt=""></div>
-                          <div class="flex-1">
-                            <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
-                            <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
-                          </div>
-                        </a>
-                        <a class="dropdown-item py-2 d-flex align-items-center" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="file-thumbnail me-2"><img class="img-fluid" src="../../../assets/img/products/60x60/3-1.png" alt=""></div>
-                          <div class="flex-1">
-                            <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
-                            <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">30 Sep at 12:30 PM</span></p>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Quick Links</h6>
-                      <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Support MacBook House</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Files</h6>
-                      <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-file-zipper text-body" data-fa-transform="shrink-2"></span> Library MacBook folder.rar</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-file-lines text-body" data-fa-transform="shrink-2"></span> Feature MacBook extensions.txt</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-image text-body" data-fa-transform="shrink-2"></span> MacBook Pro_13.jpg</div>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Members</h6>
-                      <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../../pages/members.html">
-                          <div class="avatar avatar-l status-online  me-2 text-body">
-                            <img class="rounded-circle " src="../../../assets/img/team/40x40/10-1.webp" alt="">
-                          </div>
-                          <div class="flex-1">
-                            <h6 class="mb-0 text-body-highlight title">Carry Anna</h6>
-                            <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
-                          </div>
-                        </a>
-                        <a class="dropdown-item py-2 d-flex align-items-center" href="../../../pages/members.html">
-                          <div class="avatar avatar-l  me-2 text-body">
-                            <img class="rounded-circle " src="../../../assets/img/team/40x40/12-1.webp" alt="">
-                          </div>
-                          <div class="flex-1">
-                            <h6 class="mb-0 text-body-highlight title">John Smith</h6>
-                            <p class="fs-10 mb-0 d-flex text-body-tertiary">smith@technext.it</p>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Related Searches</h6>
-                      <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"><span class="fa-brands fa-firefox-browser text-body" data-fa-transform="shrink-2"></span> Search in the Web MacBook</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-brands fa-chrome text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
-                          </div>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="text-center">
-                      <p class="fallback fw-bold fs-7 d-none">No Result Found.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="support-chat-container">
-        <div class="container-fluid support-chat">
-          <div class="card bg-body-emphasis">
-            <div class="card-header d-flex flex-between-center px-4 py-3 border-bottom border-translucent">
-              <h5 class="mb-0 d-flex align-items-center gap-2">Demo widget<span class="fa-solid fa-circle text-success fs-11"></span></h5>
-              <div class="btn-reveal-trigger"><button class="btn btn-link p-0 dropdown-toggle dropdown-caret-none transition-none d-flex" type="button" id="support-chat-dropdown" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h text-body"></span></button>
-                <div class="dropdown-menu dropdown-menu-end py-2" aria-labelledby="support-chat-dropdown"><a class="dropdown-item" href="#!">Request a callback</a><a class="dropdown-item" href="#!">Search in chat</a><a class="dropdown-item" href="#!">Show history</a><a class="dropdown-item" href="#!">Report to Admin</a><a class="dropdown-item btn-support-chat" href="#!">Close Support</a></div>
-              </div>
-            </div>
-            <div class="card-body chat p-0">
-              <div class="d-flex flex-column-reverse scrollbar h-100 p-3">
-                <div class="text-end mt-6"><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
-                    <p class="mb-0 fw-semibold fs-9">I need help with something</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
-                  </a><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
-                    <p class="mb-0 fw-semibold fs-9">I can’t reorder a product I previously ordered</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
-                  </a><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
-                    <p class="mb-0 fw-semibold fs-9">How do I place an order?</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
-                  </a><a class="false d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
-                    <p class="mb-0 fw-semibold fs-9">My payment method not working</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
-                  </a></div>
-                <div class="text-center mt-auto">
-                  <div class="avatar avatar-3xl status-online"><img class="rounded-circle border border-3 border-light-subtle" src="../../../assets/img/team/30-1.webp" alt=""></div>
-                  <h5 class="mt-2 mb-3">Eric</h5>
-                  <p class="text-center text-body-emphasis mb-0">Ask us anything – we’ll get back to you here or by email within 24 hours.</p>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer d-flex align-items-center gap-2 border-top border-translucent ps-3 pe-4 py-3">
-              <div class="d-flex align-items-center flex-1 gap-3 border border-translucent rounded-pill px-4"><input class="form-control outline-none border-0 flex-1 fs-9 px-0" type="text" placeholder="Write message"><label class="btn btn-link d-flex p-0 text-body-quaternary fs-9 border-0" for="supportChatPhotos"><span class="fa-solid fa-image"></span></label><input class="d-none" type="file" accept="image/*" id="supportChatPhotos"><label class="btn btn-link d-flex p-0 text-body-quaternary fs-9 border-0" for="supportChatAttachment"> <span class="fa-solid fa-paperclip"></span></label><input class="d-none" type="file" id="supportChatAttachment"></div><button class="btn p-0 border-0 send-btn"><span class="fa-solid fa-paper-plane fs-9"></span></button>
-            </div>
-          </div>
-      </div>
+    </div>
+</div>
+
+
+
     </main><!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
@@ -5177,21 +4997,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
-    <script src="../../../vendors/popper/popper.min-1.js"></script>
-    <script src="../../../vendors/bootstrap/bootstrap.min-1.js"></script>
-    <script src="../../../vendors/anchorjs/anchor.min-1.js"></script>
-    <script src="../../../vendors/is/is.min-1.js"></script>
-    <script src="../../../vendors/fontawesome/all.min-1.js"></script>
-    <script src="../../../vendors/lodash/lodash.min-1.js"></script>
-    <script src="../../../vendors/list.js/list.min-1.js"></script>
-    <script src="../../../vendors/feather-icons/feather.min-1.js"></script>
-    <script src="../../../vendors/dayjs/dayjs.min-1.js"></script>
-    <script src="../../../vendors/choices/choices.min.js"></script>
-    <script src="../../../vendors/echarts/echarts.min.js"></script>
-    <script src="../../../vendors/dhtmlx-gantt/dhtmlxgantt.js"></script>
-    <script src="../../../vendors/flatpickr/flatpickr.min.js"></script>
-    <script src="../../../assets/js/phoenix-1.js"></script>
-    <script src="../../../assets/js/projectmanagement-dashboard.js"></script>
+    <script src="../../vendors/popper/popper.min-1.js"></script>
+    <script src="../../vendors/bootstrap/bootstrap.min-1.js"></script>
+    <script src="../../vendors/anchorjs/anchor.min-1.js"></script>
+    <script src="../../vendors/is/is.min-1.js"></script>
+    <script src="../../vendors/fontawesome/all.min-1.js"></script>
+    <script src="../../vendors/lodash/lodash.min-1.js"></script>
+    <script src="../../vendors/list.js/list.min-1.js"></script>
+    <script src="../../vendors/feather-icons/feather.min-1.js"></script>
+    <script src="../../vendors/dayjs/dayjs.min-1.js"></script>
+    <script src="../../vendors/choices/choices.min.js"></script>
+    <script src="../../vendors/echarts/echarts.min.js"></script>
+    <script src="../../vendors/dhtmlx-gantt/dhtmlxgantt.js"></script>
+    <script src="../../vendors/flatpickr/flatpickr.min.js"></script>
+    <script src="../../assets/js/phoenix-1.js"></script>
+    <script src="../../assets/js/projectmanagement-dashboard.js"></script>
     <script>
       ClassicEditor
           .create(document.querySelector("#content"))
@@ -5202,8 +5022,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
   </body>
 
 </html>
-
-<?php
-// Close the connection when done
-closeConnection();
-?>

@@ -1,38 +1,35 @@
-﻿<?php
+
+<?php
 include '../crud_operation.php';
 
-// Handle deletion of a blog post
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
-    $post_id = $_POST['post_id'];
+// Handle deletion of a user
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user'])) {
+    $post_id = $_POST['user_id'];
 
     try {
-        deletePost($post_id);
-        echo "Blog post deleted successfully.";
+        deleteUser($user_id);
+        echo "User post deleted successfully.";
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
 }
 // Handle deletion of a blog post
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
-    $post_id = $_POST['post_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user'])) {
+    $user_id = $_POST['user_id'];
 
     try {
-        deletePost($post_id);
-        echo "<p>Blog post deleted successfully.</p>";
+        deleteUser($post_id);
+        echo "<p>User deleted successfully.</p>";
     } catch (Exception $e) {
         echo "<p>Error: " . $e->getMessage() . "</p>";
     }
 }
 
-
-
-// Fetch the list of posts
-$posts = listPosts();
-$totalItem =getPostCount();
-// $posts = updatePost();
-
-
+// Fetch the list of users
+$users = listUsers();
+$totalUsers = getUserCount();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr" data-navigation-type="default" data-navbar-horizontal-shape="default">
@@ -86,11 +83,11 @@ $totalItem =getPostCount();
             linkRTL.setAttribute('disabled', true);
             userLinkRTL.setAttribute('disabled', true);
         }
-        function confirmDelete(postId) {
-            if (confirm('Are you sure you want to delete this blog post?')) {
-                document.getElementById('delete-form-' + postId).submit();
-            }
-        }
+          function confirmDelete(user_id) {
+          if (confirm("Are you sure you want to delete this user?")) {
+        document.getElementById('delete-form-' + user_id).submit();
+       }
+       }
     </script>
 
 </head>
@@ -8420,87 +8417,51 @@ $totalItem =getPostCount();
 
         <div class="table-list" id="advanceAjaxTable">
             <div class="table-responsive scrollbar mb-3">
-                <table class="table table-sm fs-9 mb-0 overflow-hidden">
-                    <thead class="text-body">
-                    <tr>
-                        <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId"
-                            style="min-width: 4.5rem;">S/N
-                        </th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer"
-                            style="min-width: 8.5rem">Blog Title
-                        </th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer"
-                            style="min-width: 8.5rem">Category
-                        </th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer"
-                            style="min-width: 8.5rem">Content
-                        </th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer"
-                            style="min-width: 8.5rem">Caption
-                        </th>
-
-                        <th class="sort pe-1 align-middle white-space-nowrap pe-7" data-sort="date">Date</th>
-                        <th class="no-sort"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <?php foreach ($posts as $post): ?>
-                        <tr class="btn-reveal-trigger">
-                            <td class="order py-2  ps-3 align-middle white-space-nowrap">
-                                <a class="fw-semibold" href="#">
-                                    <?php echo $post['post_id']; ?>
-                                </a>
-                            </td>
-                            <td class="py-2 align-middle fw-bold">
-                                <a class="fw-semibold text-body" href="#!">
-                                    <?php echo $post['title']; ?>
-                                </a>
-                            </td>
-                            <td class="py-2 align-middle">
-                                <?php echo $post['category']; ?>
-                            </td>
-                            <td class="py-2 align-middle white-space-nowrap">
-                                <?php echo $post['content']; ?>
-                            </td>
-                            <td class="py-2 align-middle white-space-nowrap">
-                                <p class="mb-0"><?php echo $post['caption']; ?></p>
-                            </td>
-                            <td class="py-2 align-middle white-space-nowrap">
-                                <p class="mb-0"><?php echo $post['created_at']; ?></p>
-                            </td>
-                            <td class="py-2 align-middle white-space-nowrap text-end">
-                                <div class="dropstart position-static d-inline-block">
-                                    <button class="btn btn-link text-body btn-sm dropdown-toggle btn-reveal"
-                                            type="button" id="order-dropdown-2" data-bs-toggle="dropdown"
-                                            data-boundary="window" aria-haspopup="true" aria-expanded="false"
-                                            data-bs-reference="parent">
-                                        <svg class="svg-inline--fa fa-ellipsis fs-9" aria-hidden="true"
-                                             focusable="false" data-prefix="fas" data-icon="ellipsis" role="img"
-                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                                            <path fill="currentColor"
-                                                  d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"></path>
-                                        </svg>
-                                        <!-- <span class="fas fa-ellipsis-h fs-9"></span> Font Awesome fontawesome.com -->
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end border py-2"
-                                         aria-labelledby="order-dropdown-2">
-                                        <form id="delete-form-<?php echo $post['post_id']; ?>" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" style="display:inline;">
-                                            <input type="hidden" name="delete_blog_post" value="1">
-                                            <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
-                                            <button type="button" class="dropdown-item" onclick="confirmDelete(<?php echo $post['post_id']; ?>)">Delete</button>
-                                        </form>
-                                        <a href="edit?post_id=<?php echo $post['post_id']; ?>" class="dropdown-item">Edit</a>
-
-                                    </div>
-                            </td>
-                        </tr>
-
-                    <?php endforeach; ?>
-                    </tbody>
-
-                </table>
-            </div>
+            <table class="table table-sm fs-9 mb-0 overflow-hidden">
+    <thead class="text-body">
+        <tr>
+            <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId" style="min-width: 4.5rem;">S/N</th>
+            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="username" style="min-width: 8.5rem">Username</th>
+            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email" style="min-width: 8.5rem">Email</th>
+            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="phone" style="min-width: 8.5rem">Phone</th>
+            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="created_at" style="min-width: 8.5rem">Date</th>
+            <th class="no-sort"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($users as $user): ?>
+            <tr class="btn-reveal-trigger">
+                <td class="order py-2 ps-3 align-middle white-space-nowrap">
+                    <a class="fw-semibold" href="#"><?php echo $user['user_id']; ?></a>
+                </td>
+                <td class="py-2 align-middle fw-bold">
+                    <a class="fw-semibold text-body" href="#!"><?php echo $user['username']; ?></a>
+                </td>
+                <td class="py-2 align-middle"><?php echo $user['email']; ?></td>
+                <td class="py-2 align-middle white-space-nowrap"><?php echo $user['phone']; ?></td>
+                <td class="py-2 align-middle white-space-nowrap"><?php echo $user['created_at']; ?></td>
+                <td class="py-2 align-middle white-space-nowrap text-end">
+                    <div class="dropstart position-static d-inline-block">
+                        <button class="btn btn-link text-body btn-sm dropdown-toggle btn-reveal" type="button" id="user-dropdown-<?php echo $user['user_id']; ?>" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                            <svg class="svg-inline--fa fa-ellipsis fs-9" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+                                <path fill="currentColor" d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"></path>
+                            </svg>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="user-dropdown-<?php echo $user['user_id']; ?>">
+                            <form id="delete-form-<?php echo $user['user_id']; ?>" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" style="display:inline;">
+                                <input type="hidden" name="delete_user" value="1">
+                                <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
+                                <button type="button" class="dropdown-item" onclick="confirmDelete(<?php echo $user['user_id']; ?>)">Delete</button>
+                            </form>
+                            <a href="edit_user.php?user_id=<?php echo $user['user_id']; ?>" class="dropdown-item">Edit</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
             <div class="d-flex justify-content-center mt-3">
   <button class="page-link disabled" data-list-pagination="prev" disabled="">
     <svg class="svg-inline--fa fa-chevron-left" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path></svg><!-- <span class="fas fa-chevron-left"></span> Font Awesome fontawesome.com --></button>

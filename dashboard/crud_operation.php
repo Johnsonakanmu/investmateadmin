@@ -150,8 +150,8 @@ function deletePost($post_id) {
 // Create User
 function createUser($username, $password, $email) {
     global $conn;
-    $stmt = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $password, $email);
+    $stmt = $conn->prepare("INSERT INTO users (username, email, phone) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $username, $email, $phone);
     $stmt->execute();
     $stmt->close();
 }

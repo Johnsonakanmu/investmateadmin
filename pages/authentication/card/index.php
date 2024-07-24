@@ -114,7 +114,6 @@ unset($_SESSION['message']);
                         </a>
                         <h3 class="text-body-highlight">Sign In</h3>
                         <p class="text-body-tertiary">Get access to your account</p>
-                      </div><button class="btn btn-phoenix-secondary w-100 mb-3"><span class="fab fa-google text-danger me-2 fs-9"></span>Sign in with google</button><button class="btn btn-phoenix-secondary w-100"><span class="fab fa-facebook text-primary me-2 fs-9"></span>Sign in with facebook</button>
                       <div class="position-relative">
                           <?php if ($message): ?>
                               <p class="message"><?php echo htmlspecialchars($message); ?></p>
@@ -132,7 +131,6 @@ unset($_SESSION['message']);
                         </div>
                         <div class="col-auto"><a class="fs-9 fw-semibold" href="forgot-password.html">Forgot Password?</a></div>
                       </div><button class="btn btn-primary w-100 mb-3">Sign In</button>
-                      <div class="text-center"><a class="fs-9 fw-bold" href="#">Create an account</a></div>
                     </div>
                   </div>
                 </div>

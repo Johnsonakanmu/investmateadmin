@@ -448,7 +448,7 @@ $totalItems = getUserCount();
                   </div>
                   <div class="card-footer p-0 border-top border-translucent">
                     <ul class="nav d-flex flex-column my-3">
-                      <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
+                      <li class="nav-item"><a class="nav-link px-3 d-block" href="../add-new-blog/add_user.php"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
                     </ul>
                     <hr>
                     <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
@@ -4937,11 +4937,21 @@ $totalItems = getUserCount();
           <div class="col-md-9 col-auto">
             <h2 class="mb-2 text-body-emphasis">User(<?php echo $totalItems; ?>)</h2>
           </div>
+
+          
+ 
           <div class="col-md-3 col-auto">
             <div class="flatpickr-input-container"><input class="form-control ps-6 datetimepicker" id="datepicker" type="text" data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'><span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span></div>
           </div>
+
+          <div class="col-md col-auto" style="text-align: right;">
+          <a type="button" href="../add-new-blog/add_user.php" style="color: #fff;background-color: rgb(231, 54, 103)" class="btn btn-primary">Add User</a>
+
+          </div>
+
         </div>
         
+
 
         <div class="table-list" id="advanceAjaxTable">
           <div class="table-responsive scrollbar mb-3">
@@ -4995,17 +5005,15 @@ $totalItems = getUserCount();
 </tbody>
 </table>
  </div>
-<div class="d-flex justify-content-center mt-3">
- <button class="page-link disabled" data-list-pagination="prev" disabled=""><svg class="svg-inline--fa fa-chevron-left" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path></svg><!-- <span class="fas fa-chevron-left"></span> Font Awesome fontawesome.com --></button>
-    <ul class="mb-0">
-    <li class="active"><button class="page" type="button" data-i="1" data-page="1">1</button></li>
-    <!-- <li><button class="page" type="button" data-i="2" data-page="10">2</button></li>
-    <li><button class="page" type="button" data-i="3" data-page="10">3</button></li> -->
-    </ul>
-    <button class="page-link pe-0" data-list-pagination="next">
-    <svg class="svg-inline--fa fa-chevron-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path></svg>
- </button>
- </div>
+ <div class="d-flex justify-content-center mt-3">
+  <button class="page-link disabled" data-list-pagination="prev" disabled="">
+    <svg class="svg-inline--fa fa-chevron-left" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path></svg><!-- <span class="fas fa-chevron-left"></span> Font Awesome fontawesome.com --></button>
+      <ul class="mb-0 pagination">
+       <li class="active"><button class="page" type="button" data-i="1" style="color: #fff;background-color: rgb(231, 54, 103)" data-page="10">1</button></li>
+        <li><button class="page" type="button" data-i="2" data-page="10">2</button></li>
+          <li><button class="page" type="button" data-i="3" data-page="10">3</button></li></ul>
+      <button class="page-link pe-0" data-list-pagination="next"><svg class="svg-inline--fa fa-chevron-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path></svg><!-- <span class="fas fa-chevron-right"> </span> Font Awesome fontawesome.com --></button>
+  </div>
 </div>
 
 
@@ -5015,7 +5023,7 @@ $totalItems = getUserCount();
             <div class="col-12 col-sm-auto text-center">
               <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright ©
                 <span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span>
-                <br class="d-sm-none">InvestmateBlog 2024 &copy;<a class="mx-1" href="">. All Rights Reserved</a>
+                <br class="d-sm-none">InvestmateBlog 2024 &copy;<a class="mx-1" style="color: rgb(231, 54, 103)" href="">. All Rights Reserved</a>
               </p>
 
             </div>

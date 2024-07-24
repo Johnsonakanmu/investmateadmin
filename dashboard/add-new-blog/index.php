@@ -1,4 +1,4 @@
-﻿
+
 <?php
 include '../crud_operation.php';
 ?>
@@ -430,7 +430,7 @@ include '../crud_operation.php';
                   </div>
                   <div class="card-footer p-0 border-top border-translucent">
                     <ul class="nav d-flex flex-column my-3">
-                      <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
+                      <li class="nav-item"><a class="nav-link px-3 d-block" href="../add-new-blog/add_user.php"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
                     </ul>
                     <hr>
                     <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
@@ -4949,7 +4949,16 @@ include '../crud_operation.php';
                 <label class="form-label" for="category">Category</label>
                 <select class="form-select" name="category" style="height: 50px;" required id="category">
                   <option selected="selected">Choose...</option>
+                  <option selected="selected">Business</option>
                   <option selected="selected">Politics</option>
+                  <option selected="selected">Tech</option>
+                  <option selected="selected">Videos</option>
+                  <option selected="selected">Life Style</option>
+                  <option selected="selected">Game</option>
+                  <option selected="selected">Fashion</option>
+                  <option selected="selected">Word</option>
+                  <option selected="selected">Sports</option>
+
 
                 </select>
               </div>
@@ -4957,7 +4966,10 @@ include '../crud_operation.php';
                 <label class="form-label" for="caption">Caption</label>
                 <select class="form-select" name="caption" style="height: 50px;" required name="caption" id="caption">
                   <option selected="selected">Choose...</option>
-                  <option selected="selected">Business</option>
+                  <option selected="selected">Popular</option>
+                  <option selected="selected">Trending</option>
+                  <option selected="selected">Latest</option>
+
                 </select>
               </div>
 
@@ -4989,7 +5001,7 @@ include '../crud_operation.php';
             <div class="col-12 col-sm-auto text-center">
               <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright ©
                 <span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span>
-                <br class="d-sm-none">InvestmateBlog 2024 <a class="mx-1" href="">. All Rights Reserved</a>
+                <br class="d-sm-none">InvestmateBlog 2024 <a class="mx-1" href="#" style="color: rgb(231, 54, 103)">. All Rights Reserved</a>
               </p>
 
             </div>
