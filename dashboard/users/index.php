@@ -94,7 +94,7 @@ $totalItems = getUserCount();
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../add-new-blog/index.php">
+                      <li class="nav-item"><a class="nav-link" href="../blogs/new/index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
                         </a>
                       </li>
@@ -448,7 +448,7 @@ $totalItems = getUserCount();
                   </div>
                   <div class="card-footer p-0 border-top border-translucent">
                     <ul class="nav d-flex flex-column my-3">
-                      <li class="nav-item"><a class="nav-link px-3 d-block" href="../add-new-blog/add_user.php"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
+                      <li class="nav-item"><a class="nav-link px-3 d-block" href="new/index.php"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
                     </ul>
                     <hr>
                     <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
@@ -4945,7 +4945,7 @@ $totalItems = getUserCount();
           </div>
 
           <div class="col-md col-auto" style="text-align: right;">
-          <a type="button" href="../add-new-blog/add_user.php" style="color: #fff;background-color: rgb(231, 54, 103)" class="btn btn-primary">Add User</a>
+          <a type="button" href="new/index.php" style="color: #fff;background-color: rgb(231, 54, 103)" class="btn btn-primary">Add User</a>
 
           </div>
 

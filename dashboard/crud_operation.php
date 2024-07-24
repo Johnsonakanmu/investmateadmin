@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 // Directory for file uploads
-define('UPLOAD_DIR', 'uploads/');
+define('UPLOAD_DIR', 'C:/Users/JIDE/Desktop/femi/documents/');
 
 
 // File Upload Function
@@ -126,7 +126,7 @@ function updatePost($post_id, $title, $caption, $content, $category, $tags, $fil
         $stmt->bind_param("ssssssi", $title, $caption, $content, $category, $tags, $fileUrl, $post_id);
     } else {
         // Update post without changing the file URL
-        $stmt = $conn->prepare("UPDATE Post SET title = ?, caption = ?, content = ?, category = ?, tags = ? WHERE post_id = ?");
+        $stmt = $conn->prepare("UPDATE posts SET title = ?, caption = ?, content = ?, category = ?, tags = ? WHERE post_id = ?");
         $stmt->bind_param("sssssi", $title, $caption, $content, $category, $tags, $post_id);
     }
 

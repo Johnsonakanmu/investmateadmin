@@ -117,7 +117,7 @@ $totalItem =getPostCount();
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="../add-new-blog/index.php">
+                                    <li class="nav-item"><a class="nav-link" href="new/index.php">
                                             <div class="d-flex align-items-center"><span
                                                         class="nav-link-text">Add New</span></div>
                                         </a>
@@ -7222,7 +7222,7 @@ $totalItem =getPostCount();
                                 </div>
                                 <div class="card-footer p-0 border-top border-translucent">
                                     <ul class="nav d-flex flex-column my-3">
-                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="../add-new-blog/add_user.php"> <span
+                                        <li class="nav-item"><a class="nav-link px-3 d-block" href="../users/new/index.php"> <span
                                                         class="me-2 text-body align-bottom"
                                                         data-feather="user-plus"></span>Add another account</a></li>
                                     </ul>

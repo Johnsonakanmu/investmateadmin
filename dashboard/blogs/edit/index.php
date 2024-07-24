@@ -24,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
         echo "<p>Error: " . $e->getMessage() . "</p>";
     }
 }
-
+$categories = ['Politics', 'Sports', 'Tech', 'Health', 'Entertainment'];
+$captions = ['Popular', 'Trending', 'Latest'];
 
 ?>
 
@@ -106,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../../add-new-blog/index.php">
+                      <li class="nav-item"><a class="nav-link" href="../new/index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
                         </a><!-- more inner pages-->
                       </li>
@@ -4949,7 +4950,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
           
         </div>
         
-        <form class="row g-3" action="index.php" method="POST" enctype="multipart/form-data">
+        <form class="row g-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="update_blog_post" value="1">
             <input type="hidden" name="user_id" value="1">
             <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
@@ -4960,35 +4961,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
             <div class="col-md-5">
                 <label class="form-label" for="inputState">Category</label>
                 <select class="form-select" style="height: 50px;" id="category" name="category" required>
-                  <option >Choose...</option>
-                  <option value="Category 1" <?php echo ($post['category'] === 'Politics 1') ? 'selected' : ''; ?>>Politics</option>
-                  <option value="Category 2" <?php echo ($post['category'] === 'Business 2') ? 'selected' : ''; ?>>Business</option>
-                  <option value="Category 3" <?php echo ($post['category'] === 'Videos 3') ? 'selected' : ''; ?>>Video</option>
-                  <option selected="selected">Fashion</option>
-                  <option selected="selected">Sports</option>
-                  <option selected="selected">Tech</option>
-                  <option selected="selected">Life Style</option>
-
+                    <option>Choose...</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo htmlspecialchars($category); ?>" <?php echo ($post['category'] === $category) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($category); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
               </div>
               <div class="col-md-5">
                 <label class="form-label" for="caption">Caption</label>
-                <select class="form-select" id="caption" name="cation" value="<?php echo $post['caption']; ?>" style="height: 50px;" id="inputState" required>
+                <select class="form-select" id="caption" name="caption" style="height: 50px;" id="inputState" required>
                   <option selected="selected">Choose...</option>
-                  <option selected="selected">Popular</option>
-                  <option selected="selected">Trending</option>
-                  <option selected="selected">Latest</option>
+                    <?php foreach ($captions as $caption): ?>
+                        <option value="<?php echo htmlspecialchars($caption); ?>" <?php echo ($post['caption'] === $caption) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($caption); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
               </div>
 
               <div class="col-md-10 mb-3">
                 <label class="form-label" for="tag">Tags (comma-separated)</label>
-                <input class="form-control" type="text" name="tag" id="tage" value="<?php echo $post['tags']; ?>"  style="height: 50px;" required />
+                <input class="form-control" type="text" name="tags" id="tage" value="<?php echo $post['tags']; ?>"  style="height: 50px;" required />
               </div>
            
             <div class="col-md-10 mb-3">
                 <label class="form-label" for="file_attachement">File Attachment</label>
-                <input class="form-control"  style="height: 50px;" type="file" id="file_attachement" name="file_attachement" required/>
+                <input class="form-control"  style="height: 50px;" type="file" id="file_attachement" name="file_attachement"/>
               </div>
 
             <div class="col-md-10" >
@@ -4998,7 +4998,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
 
 
             <div class="col-10 mb-3">
-              <button class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit">Post</button>
+              <button class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit">Save post</button>
             </div>
           </form>
        
@@ -5202,8 +5202,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
   </body>
 
 </html>
-
-<?php
-// Close the connection when done
-closeConnection();
-?>
