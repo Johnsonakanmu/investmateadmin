@@ -1,18 +1,8 @@
 
 <?php 
 
-include '../../crud_operation.php';
-// Handle deletion of a blog post
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
-  $post_id = $_POST['post_id'];
+include '../../crud_operation.php'
 
-  try {
-      deletePost($post_id);
-      echo "Blog post deleted successfully.";
-  } catch (Exception $e) {
-      echo "Error: " . $e->getMessage();
-  }
-}
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
       }
     </script>
     <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+    <script src="vendors/dropzone/dropzone-min.js"></script>
+
+    <link href="vendors/dropzone/dropzone.css" rel="stylesheet" />
 
   </head>
 
@@ -93,10 +86,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link active" href="../../add-new-blog">
+                      <!-- <li class="nav-item"><a class="nav-link active" href="../../add-new-blog">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
+                        </a>
+                      </li> -->
                       <li class="nav-item"><a class="nav-link" href="../../blogs">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
@@ -4929,49 +4922,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
       <div class="content">
     <div class="row gy-3 mb-6 justify-content-between">
         <div class="col-md-9 col-auto">
-            <h2 class="mb-2 text-body-emphasis">Add User</h2>
+            <h2 class="mb-2 text-body-emphasis">Add New User</h2>
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Collect form data
                 $username = $_POST['username'];
                 $email = $_POST['email'];
                 $phone = $_POST['phone'];
+                $password = $_POST['password'];  // Change from 'password_hash' to 'password'
                 $file = $_FILES['file_attachement'];
-                $user_id = 1;
 
                 try {
-                    createUser($username, $email, $phone, $file, $user_id);
+                    createUser($username, $email, $phone, $password);  // Pass 'password' correctly
                     echo '<div class="alert alert-success alert-sm" role="alert">User created successfully.</div>';
                 } catch (Exception $e) {
                     echo '<div class="alert alert-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
                 }
             }
-
             ?>
         </div>
 
         <form class="row g-3" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
-            <div class="col-md-10">
+            <div class="col-md-5">
                 <label class="form-label" for="username">Name</label>
                 <input class="form-control" name="username" id="username" type="text" style="height: 50px;" required placeholder="Enter your Name">
             </div>
-            <div class="col-md-10 mb-3">
+            <div class="col-md-5 mb-3">
                 <label class="form-label" for="email">Email</label>
                 <input class="form-control" type="email" name="email" id="email" required style="height: 50px;" />
             </div>
-            <div class="col-md-10">
+
+            <div class="col-md-5 mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" name="password" id="password" required style="height: 50px;" /> <!-- Change from 'password_hash' to 'password' -->
+            </div>
+            <div class="col-md-5">
                 <label class="form-label" for="phone">Phone</label>
                 <input class="form-control" type="number" name="phone" id="phone" required style="height: 50px;" />
             </div>
-            <div class="col-md-10 mb-3">
+
+            <div class="col-md-5 mb-3">
                 <label class="form-label" for="file_attachement">File Attachment</label>
                 <input class="form-control" style="height: 50px;" type="file" id="file_attachement" name="file_attachement"/>
             </div>
-            <div class="col-10 mb-3">
-                <input class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit" value="Add User" name="submit"/>
+
+            <div class="col-8 mb-3">
+                <input class="btn btn-primary" style="width: 15%; height: 50px; background-color: rgb(231, 54, 103);" type="submit" value="Add User" name="submit"/>
             </div>
         </form>
-        
+
         <footer class="footer position-absolute">
             <div class="row g-0 justify-content-between align-items-center h-100">
                 <div class="col-12 col-sm-auto text-center">
@@ -4984,6 +4983,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
         </footer>
     </div>
 </div>
+
 
 
 
@@ -5012,6 +5012,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
     <script src="../../../vendors/flatpickr/flatpickr.min.js"></script>
     <script src="../../../assets/js/phoenix-1.js"></script>
     <script src="../../../assets/js/projectmanagement-dashboard.js"></script>
+    <script src="vendors/dropzone/dropzone-min.js"></script>
     <script>
       ClassicEditor
           .create(document.querySelector("#content"))

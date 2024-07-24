@@ -107,10 +107,10 @@ $captions = ['Popular', 'Trending', 'Latest'];
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../new/index.php">
+                      <!-- <li class="nav-item"><a class="nav-link" href="../new/index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
+                        </a>
+                      </li> -->
                       <li class="nav-item"><a class="nav-link" href="../index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->

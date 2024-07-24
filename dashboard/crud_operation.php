@@ -1,8 +1,8 @@
 <?php
 // Database connection
 $servername = "localhost";
-$username = "investimate";
-$password = "Admin.4****";
+$username = "root";
+$password = "johnson.5";
 $dbname = "investmate_admin";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -148,13 +148,45 @@ function deletePost($post_id) {
 
 
 // Create User
-function createUser($username, $password, $email) {
+// function createUsers($username, $password, $email, $phone) {
+//     global $conn;
+//     $stmt = $conn->prepare("INSERT INTO users (username, email, password, phone) VALUES (?, ?, ?, ?)");
+//     $stmt->bind_param("sss", $username, $email, $password, $phone);
+//     $stmt->execute();
+//     $stmt->close();
+// }
+
+function createUser($username, $email, $phone, $password) {
     global $conn;
-    $stmt = $conn->prepare("INSERT INTO users (username, email, phone) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $phone);
-    $stmt->execute();
+
+    // Hash the password before storing it
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password, phone) VALUES (?, ?, ?, ?)");
+
+    // Check if the statement was prepared successfully
+    if ($stmt === false) {
+        die('Prepare failed: ' . htmlspecialchars($conn->error));
+    }
+
+    // Bind the parameters
+    $stmt->bind_param("ssss", $username, $email, $hashedPassword, $phone);
+
+    // Execute the statement
+    if (!$stmt->execute()) {
+        die('Execute failed: ' . htmlspecialchars($stmt->error));
+    }
+
+    // Close the statement
     $stmt->close();
 }
+
+
+
+
+
+
 
 
 // List Users

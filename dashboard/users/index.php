@@ -94,10 +94,10 @@ $totalItems = getUserCount();
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../blogs/new/index.php">
+                      <!-- <li class="nav-item"><a class="nav-link" href="../blogs/new/index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
                         </a>
-                      </li>
+                      </li> -->
                       <li class="nav-item"><a class="nav-link" href="../blogs/index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a>
@@ -4941,7 +4941,8 @@ $totalItems = getUserCount();
           
  
           <div class="col-md-3 col-auto">
-            <div class="flatpickr-input-container"><input class="form-control ps-6 datetimepicker" id="datepicker" type="text" data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'><span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span></div>
+            <div class="flatpickr-input-container">
+              <input class="form-control ps-6 datetimepicker" id="datepicker" type="text" data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'><span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span></div>
           </div>
 
           <div class="col-md col-auto" style="text-align: right;">

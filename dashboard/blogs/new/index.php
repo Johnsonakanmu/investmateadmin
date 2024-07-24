@@ -80,10 +80,10 @@ include '../../crud_operation.php';
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link active" href="../../add-new-blog">
+                      <!-- <li class="nav-item"><a class="nav-link active" href="../../add-new-blog">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
+                        </a>
+                      </li> -->
                       <li class="nav-item"><a class="nav-link" href="..">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
@@ -4943,7 +4943,7 @@ include '../../crud_operation.php';
 
         
         <form class="row g-3" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
-            <div class="col-md-10">
+            <div class="col-md-5">
               <label class="form-label" for="title">Title</label>
               <input class="form-control" name="title" id="title" type="text" style="height: 50px;" required placeholder="Enter your title">
             </div>
@@ -4973,7 +4973,7 @@ include '../../crud_operation.php';
                 </select>
               </div>
 
-              <div class="col-md-10 mb-3">
+              <div class="col-md-5 mb-3">
                 <label class="form-label" for="tag">Tags (comma-separated)</label>
                 <input class="form-control" type="text" name="tags" id="tage"  required style="height: 50px;"  />
               </div>
