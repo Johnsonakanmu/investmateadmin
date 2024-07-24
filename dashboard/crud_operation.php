@@ -10,9 +10,9 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
+$uploadDir ='C:/Users/JIDE/Desktop/femi/documents/';
 // Directory for file uploads
-define('UPLOAD_DIR', 'C:/Users/JIDE/Desktop/femi/documents/');
+define('UPLOAD_DIR', $uploadDir);
 
 
 // File Upload Function
@@ -38,8 +38,9 @@ function uploadFile($file) {
 
 // File Retrieval Function
 function getFileUrl($fileName) {
+    global $uploadDir;
     // URL of the file based on the upload directory
-    $uploadUrl = '/uploads/' . $fileName;
+    $uploadUrl = $uploadDir . $fileName;
     return $uploadUrl;
 }
 
@@ -64,16 +65,16 @@ function validateUser($username, $password) {
 
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
+        if (password_verify($password, $user['password_hash'])) {
             return $user;
         }
     }
     return false;
 }
 
-function createBlogPost($title, $caption, $category, $content, $tags, $file, $user_id) {
+function createBlogPost($title, $caption, $category, $content, $tags, $file) {
     global $conn;
-
+    $user_id = $_SESSION['user_id'];
     // Handle file upload if a file is provided
     $fileUrl = null;
     if (!empty($file['name'])) {
@@ -148,11 +149,26 @@ function deletePost($post_id) {
 
 
 // Create User
-function createUser($username, $password, $email) {
+function createUser($first_name, $last_name, $username, $email, $phone, $password, $photo) {
     global $conn;
-    $stmt = $conn->prepare("INSERT INTO users (username, email, phone) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $phone);
-    $stmt->execute();
+    $fileUrl = null;
+
+    // Handle file upload if photo is provided
+    if ($photo && !empty($photo['name'])) {
+        $fileName = uploadFile($photo);
+        $fileUrl = getFileUrl($fileName);
+    }
+
+    // Hash the password before saving
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("INSERT INTO users (first_name, last_name,username, email, phone, password_hash, profile_picture_url) VALUES (?, ?, ?, ?, ?,?,?)");
+    $stmt->bind_param("sssssss", $first_name, $last_name,$username, $email, $phone, $hashedPassword, $fileUrl);
+    // Execute the statement
+    if (!$stmt->execute()) {
+        die('Execute failed: ' . htmlspecialchars($stmt->error));
+    }
     $stmt->close();
 }
 

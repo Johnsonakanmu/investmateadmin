@@ -1,6 +1,6 @@
 
-<?php 
-
+<?php
+require_once '../../auth.php';
 include '../../crud_operation.php';
 // Handle deletion of a blog post
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
@@ -446,7 +446,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
                       <li class="nav-item"><a class="nav-link px-3 d-block" href="../add-new-blog/add_user.php"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
                     </ul>
                     <hr>
-                    <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
+                    <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="../../logout.php"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
                     <div class="my-2 text-center fw-bold fs-10 text-body-quaternary"><a class="text-body-quaternary me-1" href="#!">Privacy policy</a>&bull;<a class="text-body-quaternary mx-1" href="#!">Terms</a>&bull;<a class="text-body-quaternary ms-1" href="#!">Cookies</a></div>
                   </div>
                 </div>
@@ -4934,16 +4934,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Collect form data
                 $username = $_POST['username'];
-                $email = $_POST['email'];
-                $phone = $_POST['phone'];
-                $file = $_FILES['file_attachement'];
-                $user_id = 1;
+                $first_name = $_POST['first_name'];
+                $last_name = $_POST['last_name'];
+                $email = $username;
+                $phone = "NA";
+                $photo = $_FILES['file_attachement'];
+                $password = $_POST['password'];
+
 
                 try {
-                    createUser($username, $email, $phone, $file, $user_id);
-                    echo '<div class="alert alert-success alert-sm" role="alert">User created successfully.</div>';
+                    createUser($first_name, $last_name,$username, $email, $phone,$password, $photo);
+                    echo '<div class="alert alert-subtle-success" role="alert">User created successfully.</div>';
                 } catch (Exception $e) {
-                    echo '<div class="alert alert-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
+                    echo '<div class="alert alert-subtle-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
                 }
             }
 
@@ -4951,23 +4954,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
         </div>
 
         <form class="row g-3" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
-            <div class="col-md-10">
-                <label class="form-label" for="username">Name</label>
-                <input class="form-control" name="username" id="username" type="text" style="height: 50px;" required placeholder="Enter your Name">
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="first_name">First Name</label>
+                <input class="form-control" type="text" name="first_name" id="first_name" required style="height: 50px;" />
             </div>
-            <div class="col-md-10 mb-3">
-                <label class="form-label" for="email">Email</label>
-                <input class="form-control" type="email" name="email" id="email" required style="height: 50px;" />
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="last_name">Last Name</label>
+                <input class="form-control" type="text" name="last_name" id="last_name" required style="height: 50px;" />
             </div>
-            <div class="col-md-10">
-                <label class="form-label" for="phone">Phone</label>
-                <input class="form-control" type="number" name="phone" id="phone" required style="height: 50px;" />
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" name="username" id="username" required style="height: 50px;" />
             </div>
-            <div class="col-md-10 mb-3">
-                <label class="form-label" for="file_attachement">File Attachment</label>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" name="password" id="password" required style="height: 50px;" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="file_attachement">Photo</label>
                 <input class="form-control" style="height: 50px;" type="file" id="file_attachement" name="file_attachement"/>
             </div>
-            <div class="col-10 mb-3">
+            <div class="col-6 mb-3">
                 <input class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit" value="Add User" name="submit"/>
             </div>
         </form>

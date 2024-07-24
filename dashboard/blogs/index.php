@@ -1,4 +1,5 @@
 ﻿<?php
+require_once '../auth.php';
 include '../crud_operation.php';
 
 // Handle deletion of a blog post
@@ -2459,36 +2460,10 @@ $totalItem =getPostCount();
                             <div class="mb-3 mx-3"><input class="form-control form-control-sm" id="statusUpdateInput"
                                                           type="text" placeholder="Update your status"></div>
                         </div>
-                        <div class="overflow-auto scrollbar" style="height: 10rem;">
-                            <ul class="nav d-flex flex-column mb-2 pb-1">
-                                <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span
-                                                class="me-2 text-body align-bottom" data-feather="user"></span><span>Profile</span></a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"><span
-                                                class="me-2 text-body align-bottom" data-feather="pie-chart"></span>Dashboard</a>
-                                </li>
-                                <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span
-                                                class="me-2 text-body align-bottom" data-feather="lock"></span>Posts
-                                        &amp; Activity</a></li>
-                                <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span
-                                                class="me-2 text-body align-bottom" data-feather="settings"></span>Settings
-                                        &amp; Privacy </a></li>
-                                <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span
-                                                class="me-2 text-body align-bottom" data-feather="help-circle"></span>Help
-                                        Center</a></li>
-                                <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span
-                                                class="me-2 text-body align-bottom" data-feather="globe"></span>Language</a>
-                                </li>
-                            </ul>
-                        </div>
+
                         <div class="card-footer p-0 border-top border-translucent">
-                            <ul class="nav d-flex flex-column my-3">
-                                <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span
-                                                class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add
-                                        another account</a></li>
-                            </ul>
                             <hr>
-                            <div class="px-3"><a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!">
+                            <div class="px-3"><a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="../logout.php">
                                     <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
                             <div class="my-2 text-center fw-bold fs-10 text-body-quaternary"><a
                                         class="text-body-quaternary me-1" href="#!">Privacy policy</a>&bull;<a
@@ -8423,94 +8398,72 @@ $totalItem =getPostCount();
                 <table class="table table-sm fs-9 mb-0 overflow-hidden">
                     <thead class="text-body">
                     <tr>
-                        <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId"
-                            style="min-width: 4.5rem;">S/N
-                        </th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer"
-                            style="min-width: 8.5rem">Blog Title
-                        </th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer"
-                            style="min-width: 8.5rem">Category
-                        </th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer"
-                            style="min-width: 8.5rem">Content
-                        </th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer"
-                            style="min-width: 8.5rem">Caption
-                        </th>
-
+                        <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId" style="min-width: 4.5rem;">S/N</th>
+                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Blog Title</th>
+                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Category</th>
+                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Content</th>
+                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Caption</th>
                         <th class="sort pe-1 align-middle white-space-nowrap pe-7" data-sort="date">Date</th>
                         <th class="no-sort"></th>
                     </tr>
                     </thead>
                     <tbody>
-
-                    <?php foreach ($posts as $post): ?>
-                        <tr class="btn-reveal-trigger">
-                            <td class="order py-2  ps-3 align-middle white-space-nowrap">
-                                <a class="fw-semibold" href="#">
-                                    <?php echo $post['post_id']; ?>
-                                </a>
-                            </td>
-                            <td class="py-2 align-middle fw-bold">
-                                <a class="fw-semibold text-body" href="#!">
-                                    <?php echo $post['title']; ?>
-                                </a>
-                            </td>
-                            <td class="py-2 align-middle">
-                                <?php echo $post['category']; ?>
-                            </td>
-                            <td class="py-2 align-middle white-space-nowrap">
-                                <?php echo $post['content']; ?>
-                            </td>
-                            <td class="py-2 align-middle white-space-nowrap">
-                                <p class="mb-0"><?php echo $post['caption']; ?></p>
-                            </td>
-                            <td class="py-2 align-middle white-space-nowrap">
-                                <p class="mb-0"><?php echo $post['created_at']; ?></p>
-                            </td>
-                            <td class="py-2 align-middle white-space-nowrap text-end">
-                                <div class="dropstart position-static d-inline-block">
-                                    <button class="btn btn-link text-body btn-sm dropdown-toggle btn-reveal"
-                                            type="button" id="order-dropdown-2" data-bs-toggle="dropdown"
-                                            data-boundary="window" aria-haspopup="true" aria-expanded="false"
-                                            data-bs-reference="parent">
-                                        <svg class="svg-inline--fa fa-ellipsis fs-9" aria-hidden="true"
-                                             focusable="false" data-prefix="fas" data-icon="ellipsis" role="img"
-                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                                            <path fill="currentColor"
-                                                  d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"></path>
-                                        </svg>
-                                        <!-- <span class="fas fa-ellipsis-h fs-9"></span> Font Awesome fontawesome.com -->
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end border py-2"
-                                         aria-labelledby="order-dropdown-2">
-                                        <form id="delete-form-<?php echo $post['post_id']; ?>" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" style="display:inline;">
-                                            <input type="hidden" name="delete_blog_post" value="1">
-                                            <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
-                                            <button type="button" class="dropdown-item" onclick="confirmDelete(<?php echo $post['post_id']; ?>)">Delete</button>
-                                        </form>
-                                        <a href="edit?post_id=<?php echo $post['post_id']; ?>" class="dropdown-item">Edit</a>
-
-                                    </div>
-                            </td>
+                    <?php if (empty($posts)): ?>
+                        <tr>
+                            <td colspan="7" class="text-center py-2">No blog posts available.</td>
                         </tr>
-
-                    <?php endforeach; ?>
+                    <?php else: ?>
+                        <?php foreach ($posts as $post): ?>
+                            <tr class="btn-reveal-trigger">
+                                <td class="order py-2 ps-3 align-middle white-space-nowrap">
+                                    <a class="fw-semibold" href="#">
+                                        <?php echo $post['post_id']; ?>
+                                    </a>
+                                </td>
+                                <td class="py-2 align-middle fw-bold">
+                                    <a class="fw-semibold text-body" href="#!">
+                                        <?php echo $post['title']; ?>
+                                    </a>
+                                </td>
+                                <td class="py-2 align-middle">
+                                    <?php echo $post['category']; ?>
+                                </td>
+                                <td class="py-2 align-middle white-space-nowrap">
+                                    <?php echo $post['content']; ?>
+                                </td>
+                                <td class="py-2 align-middle white-space-nowrap">
+                                    <p class="mb-0"><?php echo $post['caption']; ?></p>
+                                </td>
+                                <td class="py-2 align-middle white-space-nowrap">
+                                    <p class="mb-0"><?php echo $post['created_at']; ?></p>
+                                </td>
+                                <td class="py-2 align-middle white-space-nowrap text-end">
+                                    <div class="dropstart position-static d-inline-block">
+                                        <button class="btn btn-link text-body btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-2" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                            <svg class="svg-inline--fa fa-ellipsis fs-9" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+                                                <path fill="currentColor" d="M8 256a56 56 0 1 1 112 0A56 56 0 1 1 8 256zm160 0a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm216-56a56 56 0 1 1 0 112 56 56 0 1 1 0-112z"></path>
+                                            </svg>
+                                            <!-- <span class="fas fa-ellipsis-h fs-9"></span> Font Awesome fontawesome.com -->
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="order-dropdown-2">
+                                            <form id="delete-form-<?php echo $post['post_id']; ?>" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" style="display:inline;">
+                                                <input type="hidden" name="delete_blog_post" value="1">
+                                                <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
+                                                <button type="button" class="dropdown-item" onclick="confirmDelete(<?php echo $post['post_id']; ?>)">Delete</button>
+                                            </form>
+                                            <a href="edit.php?post_id=<?php echo $post['post_id']; ?>" class="dropdown-item">Edit</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                     </tbody>
-
                 </table>
+
             </div>
-            <div class="d-flex justify-content-center mt-3">
-  <button class="page-link disabled" data-list-pagination="prev" disabled="">
-    <svg class="svg-inline--fa fa-chevron-left" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path></svg><!-- <span class="fas fa-chevron-left"></span> Font Awesome fontawesome.com --></button>
-      <ul class="mb-0 pagination">
-       <li class="active"><button class="page" type="button" data-i="1" style="color: #fff;background-color: rgb(231, 54, 103)" data-page="10">1</button></li>
-        <li><button class="page" type="button" data-i="2" data-page="10">2</button></li>
-          <li><button class="page" type="button" data-i="3" data-page="10">3</button></li></ul>
-      <button class="page-link pe-0" data-list-pagination="next"><svg class="svg-inline--fa fa-chevron-right" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" data-fa-i2svg=""><path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path></svg><!-- <span class="fas fa-chevron-right"> </span> Font Awesome fontawesome.com --></button>
-  </div>
-        </div>
+
+
 
 
         <footer class="footer position-absolute">
@@ -8553,7 +8506,3 @@ $totalItem =getPostCount();
 </body>
 
 </html>
-
-<!-- <?php
-closeConnection();
-?> -->
