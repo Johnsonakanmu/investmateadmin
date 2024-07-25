@@ -4945,7 +4945,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
 
                 try {
                   createCategory($name, $description,);
-                    echo '<div class="alert alert-success alert-sm" role="alert">Category created successfully.</div>';
+                    echo '<div class="col-12 alert alert-success alert-sm" style="text-align: center" role="alert">Category created successfully.</div>';
                 } catch (Exception $e) {
                     echo '<div class="alert alert-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
                 }
@@ -4965,7 +4965,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
             
            
             <div class="col-12 d-flex justify-content-center">
-                <input class="btn btn-primary" style="width: 100%; max-width: 150px; height: 50px; background-color: rgb(231, 54, 103);" type="submit" value="Add User" name="submit">
+                <input class="btn btn-primary" style="width: 100%; max-width: 150px; height: 50px; background-color: rgb(231, 54, 103);" type="submit" value="Add Category" name="submit">
             </div>
         </form>
 

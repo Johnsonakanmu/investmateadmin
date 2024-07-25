@@ -8418,7 +8418,6 @@ $totalItems = getUserCount();
                         <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId" style="min-width: 4.5rem;">S/N</th>
                         <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Name</th>
                         <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Description</th>
-                        <th class="sort pe-1 align-middle white-space-nowrap pe-7" data-sort="date">Date</th>
                         <th class="no-sort"></th>
                     </tr>
                     </thead>
@@ -8444,9 +8443,7 @@ $totalItems = getUserCount();
                                 <td class="py-2 align-middle white-space-nowrap">
                                     <?php echo $category['description']; ?>
                                 </td>
-                                <td class="py-2 align-middle white-space-nowrap">
-                                    <p class="mb-0"><?php echo $category['created_at']; ?></p>
-                                </td>
+                                
                                 <td class="py-2 align-middle white-space-nowrap text-end">
                                     <div class="dropstart position-static d-inline-block">
                                         <button class="btn btn-link text-body btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-2" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
