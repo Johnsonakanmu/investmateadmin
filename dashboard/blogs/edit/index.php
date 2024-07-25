@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
         echo "<p>Error: " . $e->getMessage() . "</p>";
     }
 }
-$categories = ['Politics', 'Sports', 'Tech', 'Health', 'Entertainment'];
-$captions = ['Popular', 'Trending', 'Latest'];
+$categories = ['Politics', 'Sports', 'Culture', 'Tech', 'Health', 'Entertainment'];
+// $captions = ['Popular', 'Trending', 'Latest'];
 
 ?>
 
@@ -87,6 +87,16 @@ $captions = ['Popular', 'Trending', 'Latest'];
     </script>
     <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
 
+    <style>
+        .tag-button {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .tag-button:hover {
+            background-color: rgb(231, 54, 103);
+            color: white;
+        }
+    </style>
+
   </head>
 
   <body>
@@ -108,10 +118,10 @@ $captions = ['Popular', 'Trending', 'Latest'];
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../new/index.php">
+                      <!-- <li class="nav-item"><a class="nav-link" href="../new/index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
+                        </a>
+                      </li> -->
                       <li class="nav-item"><a class="nav-link" href="../index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
@@ -4970,22 +4980,19 @@ $captions = ['Popular', 'Trending', 'Latest'];
                     <?php endforeach; ?>
                 </select>
               </div>
-              <div class="col-md-5">
+
+              <div class="col-sm-12 col-md-6 col-lg-5">
                 <label class="form-label" for="caption">Caption</label>
-                <select class="form-select" id="caption" name="caption" style="height: 50px;" id="inputState" required>
-                  <option selected="selected">Choose...</option>
-                    <?php foreach ($captions as $caption): ?>
-                        <option value="<?php echo htmlspecialchars($caption); ?>" <?php echo ($post['caption'] === $caption) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($caption); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-              </div>
+                <input class="form-control" type="text" name="caption" id="caption" required>
+                    </div>
+
 
               <div class="col-md-10 mb-3">
                 <label class="form-label" for="tag">Tags (comma-separated)</label>
                 <input class="form-control" type="text" name="tags" id="tage" value="<?php echo $post['tags']; ?>"  style="height: 50px;" required />
               </div>
+
+              
            
             <div class="col-md-10 mb-3">
                 <label class="form-label" for="file_attachement">File Attachment</label>

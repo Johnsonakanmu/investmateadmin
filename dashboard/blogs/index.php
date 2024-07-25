@@ -118,11 +118,11 @@ $totalItem =getPostCount();
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="new/index.php">
+                                    <!-- <li class="nav-item"><a class="nav-link" href="new/index.php">
                                             <div class="d-flex align-items-center"><span
                                                         class="nav-link-text">Add New</span></div>
                                         </a>
-                                    </li>
+                                    </li> -->
                                     <li class="nav-item"><a class="nav-link active" href="index.php">
                                             <div class="d-flex align-items-center"><span
                                                         class="nav-link-text">Blog Post</span></div>
@@ -8383,14 +8383,20 @@ $totalItem =getPostCount();
             <div class="col-md-9 col-auto">
                 <h2 class="mb-2 text-body-emphasis">Blog Post( <?php echo $totalItem; ?>)</h2>
             </div>
+
             <div class="col-md-3 col-auto">
-                <div class="flatpickr-input-container">
-                    <input class="form-control ps-6 datetimepicker" id="datepicker" type="text"
-                           data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'>
-                    <span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span>
-                </div>
+                <div class="flatpickr-input-container"><input class="form-control ps-6 datetimepicker" id="datepicker" type="text" data-options='{"dateFormat":"M j, Y","disableMobile":true,"defaultDate":"Mar 1, 2022"}'> <span class="uil uil-calendar-alt flatpickr-icon text-body-tertiary"></span></div>
             </div>
+
+
+            <div class="col-md col-auto" style="text-align: right;">
+          <a type="button" href="../blogs/new/index.php" style="color: #fff;background-color: rgb(231, 54, 103)" class="btn btn-primary">Add Posts</a>
         </div>
+
+        </div>
+
+
+        
 
 
         <div class="table-list" id="advanceAjaxTable">
@@ -8399,9 +8405,9 @@ $totalItem =getPostCount();
                     <thead class="text-body">
                     <tr>
                         <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId" style="min-width: 4.5rem;">S/N</th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Blog Title</th>
+                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 6.5rem">Blog Title</th>
                         <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Category</th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Content</th>
+                        <!-- <th class="sort pe-2 align-middle " data-sort="customer" style="min-width: 8.5rem">Content</th> -->
                         <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Caption</th>
                         <th class="sort pe-1 align-middle white-space-nowrap pe-7" data-sort="date">Date</th>
                         <th class="no-sort"></th>
@@ -8428,9 +8434,9 @@ $totalItem =getPostCount();
                                 <td class="py-2 align-middle">
                                     <?php echo $post['category']; ?>
                                 </td>
-                                <td class="py-2 align-middle white-space-nowrap">
+                                <!-- <td class="py-2 align-middle">
                                     <?php echo $post['content']; ?>
-                                </td>
+                                </td> -->
                                 <td class="py-2 align-middle white-space-nowrap">
                                     <p class="mb-0"><?php echo $post['caption']; ?></p>
                                 </td>
@@ -8451,7 +8457,7 @@ $totalItem =getPostCount();
                                                 <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
                                                 <button type="button" class="dropdown-item" onclick="confirmDelete(<?php echo $post['post_id']; ?>)">Delete</button>
                                             </form>
-                                            <a href="edit.php?post_id=<?php echo $post['post_id']; ?>" class="dropdown-item">Edit</a>
+                                            <a href="/edit.php?post_id=<?php echo $post['post_id']; ?>" class="dropdown-item">Edit</a>
                                         </div>
                                     </div>
                                 </td>

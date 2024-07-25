@@ -1,6 +1,6 @@
 
-<?php
-require_once '../../auth.php';
+<?php 
+
 include '../../crud_operation.php';
 // Handle deletion of a blog post
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
@@ -71,6 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
       }
     </script>
     <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+    <script src="vendors/dropzone/dropzone-min.js"></script>
+
+    <link href="vendors/dropzone/dropzone.css" rel="stylesheet" />
 
   </head>
 
@@ -93,10 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <li class="nav-item"><a class="nav-link active" href="../../add-new-blog">
+                      <!-- <li class="nav-item"><a class="nav-link active" href="../../add-new-blog">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
-                        </a><!-- more inner pages-->
-                      </li>
+                        </a>
+                      </li> -->
                       <li class="nav-item"><a class="nav-link" href="../../blogs">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
@@ -4929,56 +4932,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
       <div class="content">
     <div class="row gy-3 mb-6 justify-content-between">
         <div class="col-md-9 col-auto">
-            <h2 class="mb-2 text-body-emphasis">Add User</h2>
+            <h2 class="mb-2 text-body-emphasis">Add New User</h2>
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Collect form data
-                $username = $_POST['username'];
                 $first_name = $_POST['first_name'];
                 $last_name = $_POST['last_name'];
-                $email = $username;
-                $phone = "NA";
-                $photo = $_FILES['file_attachement'];
+                $username = $_POST['username'];
+                $email = $_POST['email'];
+                $phone = $_POST['phone'];
                 $password = $_POST['password'];
-
+                $file = $_FILES['file_attachement'];
 
                 try {
-                    createUser($first_name, $last_name,$username, $email, $phone,$password, $photo);
-                    echo '<div class="alert alert-subtle-success" role="alert">User created successfully.</div>';
+                    createUser($first_name, $last_name, $username, $email, $phone, $password, $file);
+                    echo '<div class="alert alert-success alert-sm" role="alert">User created successfully.</div>';
                 } catch (Exception $e) {
-                    echo '<div class="alert alert-subtle-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
+                    echo '<div class="alert alert-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
                 }
             }
-
             ?>
         </div>
 
         <form class="row g-3" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
-            <div class="col-md-6 mb-3">
-                <label class="form-label" for="first_name">First Name</label>
-                <input class="form-control" type="text" name="first_name" id="first_name" required style="height: 50px;" />
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label" for="last_name">Last Name</label>
-                <input class="form-control" type="text" name="last_name" id="last_name" required style="height: 50px;" />
-            </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 col-lg-5">
                 <label class="form-label" for="username">Username</label>
-                <input class="form-control" type="text" name="username" id="username" required style="height: 50px;" />
+                <input class="form-control" name="username" id="username" type="text" style="height: 50px;" required placeholder="Enter your username">
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 col-lg-5">
+                <label class="form-label" for="first_name">First Name</label>
+                <input class="form-control" name="first_name" id="first_name" type="text" style="height: 50px;" required placeholder="Enter your first name">
+            </div>
+            <div class="col-md-6 col-lg-5">
+                <label class="form-label" for="last_name">Last Name</label>
+                <input class="form-control" name="last_name" id="last_name" type="text" style="height: 50px;" required placeholder="Enter your last name">
+            </div>
+            
+            <div class="col-md-6 col-lg-5">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" name="email" id="email" required style="height: 50px;" placeholder="Enter your email">
+            </div>
+            <div class="col-md-6 col-lg-5">
                 <label class="form-label" for="password">Password</label>
-                <input class="form-control" type="password" name="password" id="password" required style="height: 50px;" />
+                <input class="form-control" type="password" name="password" id="password" required style="height: 50px;" placeholder="Enter your password">
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label" for="file_attachement">Photo</label>
-                <input class="form-control" style="height: 50px;" type="file" id="file_attachement" name="file_attachement"/>
+            <div class="col-md-6 col-lg-5">
+                <label class="form-label" for="phone">Phone</label>
+                <input class="form-control" type="number" name="phone" id="phone" required style="height: 50px;" placeholder="Enter your phone number">
             </div>
-            <div class="col-6 mb-3">
-                <input class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit" value="Add User" name="submit"/>
+            <div class="col-md-6 col-lg-5">
+                <label class="form-label" for="file_attachement">Profile Picture</label>
+                <input class="form-control" style="height: 50px;" type="file" id="file_attachement" name="file_attachement">
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <input class="btn btn-primary" style="width: 100%; max-width: 150px; height: 50px; background-color: rgb(231, 54, 103);" type="submit" value="Add User" name="submit">
             </div>
         </form>
-        
+
         <footer class="footer position-absolute">
             <div class="row g-0 justify-content-between align-items-center h-100">
                 <div class="col-12 col-sm-auto text-center">
@@ -4991,6 +5001,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
         </footer>
     </div>
 </div>
+
+
 
 
 
@@ -5019,6 +5031,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
     <script src="../../../vendors/flatpickr/flatpickr.min.js"></script>
     <script src="../../../assets/js/phoenix-1.js"></script>
     <script src="../../../assets/js/projectmanagement-dashboard.js"></script>
+    <script src="vendors/dropzone/dropzone-min.js"></script>
     <script>
       ClassicEditor
           .create(document.querySelector("#content"))

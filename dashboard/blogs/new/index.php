@@ -4931,23 +4931,23 @@ include '../../crud_operation.php';
 
                   try {
                       createBlogPost($title, $caption, $category, $content, $tags, $file);
-                      echo '<div class="alert alert-success alert-sm" role="alert">Blog post created successfully.</div>';
+                      echo '<div class="row"><div class="col-12"><div class="alert alert-success alert-sm" role="alert" style="text-align:center">Blog post created successfully.</div></div></div>';
                   } catch (Exception $e) {
-                      echo '<div class="alert alert-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
+                      echo '<div class="row"><div class="col-12"><div class="alert alert-danger" role="alert">Error: ' . htmlspecialchars($e->getMessage()) . '</div></div></div>';
                   }
               }
               $categories = ['Politics', 'Sports', 'Tech', 'Health', 'Entertainment'];
-              $captions = ['Popular', 'Trending', 'Latest'];
+              // $captions = ['Popular', 'Trending', 'Latest'];
               ?>
           </div>
 
         
         <form class="row g-3" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
-            <div class="col-md-10">
+            <div class="col-12 col-md-6 col-lg-6">
               <label class="form-label" for="title">Title</label>
               <input class="form-control" name="title" id="title" type="text" style="height: 50px;" required placeholder="Enter your title">
             </div>
-            <div class="col-md-5">
+            <div class=" col-12 col-md-6 col-lg-6">
                 <label class="form-label" for="category">Category</label>
                 <select class="form-select" name="category" style="height: 50px;" required id="category">
                   <option selected="selected">Choose...</option>
@@ -4960,7 +4960,13 @@ include '../../crud_operation.php';
 
                 </select>
               </div>
-              <div class="col-md-5">
+              <div class="col-12 col-md-6 col-lg-6 mb-3">
+                <label class="form-label"  for="caption">Caption</label>
+                <input class="form-control" style="height: 47px;" type="text" name="caption" id="caption" required placeholder="Enter a caption">
+            </div>
+
+
+              <!-- <div class="col-md-5">
                 <label class="form-label" for="caption">Caption</label>
                 <select class="form-select" name="caption" style="height: 50px;" required  id="caption">
                   <option selected="selected">Choose...</option>
@@ -4971,27 +4977,27 @@ include '../../crud_operation.php';
                     <?php endforeach; ?>
 
                 </select>
-              </div>
+              </div> -->
 
-              <div class="col-md-10 mb-3">
+              <div class="col-md-6 col-lg-6 mb-3">
                 <label class="form-label" for="tag">Tags (comma-separated)</label>
                 <input class="form-control" type="text" name="tags" id="tage"  required style="height: 50px;"  />
               </div>
            
-            <div class="col-md-10 mb-3">
+            <div class="col- 12md-12 mb-3">
                 <label class="form-label" for="file_attachement" >File Attachment</label>
                 <input class="form-control"  style="height: 50px;" type="file" id="file_attachement" name="file_attachement"/>
               </div>
             
-              <div class="col-md-10" >
+              <div class="col-md-12" >
                 <label class="form-label" for="content">Content</label>
                 <textarea id="content" name="content"></textarea>
               </div>
 
              
             
-            <div class="col-10 mb-3">
-              <input class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit"   value="Post" name="submit"/>
+              <div class="col-12 mb-3 d-flex justify-content-center">
+                <input class="btn btn-primary" style="width: 100%; max-width: 200px; height: 50px; background-color: rgb(231, 54, 103);" type="submit" value="Post" name="submit">
             </div>
           </form>
        
