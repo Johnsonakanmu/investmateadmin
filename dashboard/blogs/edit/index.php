@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) 
     }
 }
 $categories = ['Politics', 'Sports', 'Culture', 'Tech', 'Health', 'Entertainment'];
-// $captions = ['Popular', 'Trending', 'Latest'];
+$captions = ['Popular', 'Trending', 'Latest'];
 
 ?>
 
@@ -4983,8 +4983,15 @@ $categories = ['Politics', 'Sports', 'Culture', 'Tech', 'Health', 'Entertainment
 
               <div class="col-sm-12 col-md-6 col-lg-5">
                 <label class="form-label" for="caption">Caption</label>
-                <input class="form-control" type="text" name="caption" id="caption" required>
-                    </div>
+                <select class="form-select" id="caption" name="caption" style="height: 50px;" id="inputState" required>
+                  <option selected="selected">Choose...</option>
+                    <?php foreach ($captions as $caption): ?>
+                        <option value="<?php echo htmlspecialchars($caption); ?>" <?php echo ($post['caption'] === $caption) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($caption); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+              </div>
 
 
               <div class="col-md-10 mb-3">

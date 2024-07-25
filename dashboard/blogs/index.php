@@ -8457,7 +8457,7 @@ $totalItem =getPostCount();
                                                 <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
                                                 <button type="button" class="dropdown-item" onclick="confirmDelete(<?php echo $post['post_id']; ?>)">Delete</button>
                                             </form>
-                                            <a href="/edit.php?post_id=<?php echo $post['post_id']; ?>" class="dropdown-item">Edit</a>
+                                            <a href="./edit?post_id=<?php echo $post['post_id']; ?>" class="dropdown-item">Edit</a>
                                         </div>
                                     </div>
                                 </td>

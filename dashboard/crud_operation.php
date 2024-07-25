@@ -1,8 +1,8 @@
 <?php
 // Database connection
 $servername = "localhost";
-$username = "root";
-$password = "johnson.5";
+$username = "investimate";
+$password = "Admin.4****";
 $dbname = "investmate_admin";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -10,7 +10,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-$uploadDir ='C:/Users/JOHNSON AKANMU/Documents/';
+$uploadDir ='C:/Users/JIDE/Desktop/femi/documents/';
 // Directory for file uploads
 define('UPLOAD_DIR', $uploadDir);
 
@@ -82,7 +82,7 @@ function createBlogPost($title, $caption, $category, $content, $tags, $file) {
         $fileUrl = getFileUrl($fileName);
     }
 
-    
+
 
     // Prepare the SQL statement
     $stmt = $conn->prepare("INSERT INTO posts (title, caption, content, category, tags, featured_image_url, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");

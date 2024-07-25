@@ -4937,7 +4937,7 @@ include '../../crud_operation.php';
                   }
               }
               $categories = ['Politics', 'Sports', 'Tech', 'Health', 'Entertainment'];
-              // $captions = ['Popular', 'Trending', 'Latest'];
+               $captions = ['Popular', 'Trending', 'Latest'];
               ?>
           </div>
 
@@ -4960,13 +4960,7 @@ include '../../crud_operation.php';
 
                 </select>
               </div>
-              <div class="col-12 col-md-6 col-lg-6 mb-3">
-                <label class="form-label"  for="caption">Caption</label>
-                <input class="form-control" style="height: 47px;" type="text" name="caption" id="caption" required placeholder="Enter a caption">
-            </div>
-
-
-              <!-- <div class="col-md-5">
+              <div class="col-md-6">
                 <label class="form-label" for="caption">Caption</label>
                 <select class="form-select" name="caption" style="height: 50px;" required  id="caption">
                   <option selected="selected">Choose...</option>
@@ -4977,7 +4971,7 @@ include '../../crud_operation.php';
                     <?php endforeach; ?>
 
                 </select>
-              </div> -->
+              </div>
 
               <div class="col-md-6 col-lg-6 mb-3">
                 <label class="form-label" for="tag">Tags (comma-separated)</label>
@@ -5017,16 +5011,7 @@ include '../../crud_operation.php';
       </div>
 
 
-    </main><!-- ===============================================-->
-    <!--    End of Main Content-->
-    <!-- ===============================================-->
-
-    
-    
-
-    <!-- ===============================================-->
-    <!--    JavaScripts-->
-    <!-- ===============================================-->
+    </main>
     <script src="../../../vendors/popper/popper.min-1.js"></script>
     <script src="../../../vendors/bootstrap/bootstrap.min-1.js"></script>
     <script src="../../../vendors/anchorjs/anchor.min-1.js"></script>
