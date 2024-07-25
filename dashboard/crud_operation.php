@@ -114,6 +114,34 @@ function listPosts() {
     $stmt->close();
     return $posts;
 }
+function listCategories() {
+    global $conn;
+    $stmt = $conn->prepare("SELECT * FROM category");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $posts = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+    return $posts;
+}
+function deleteCategory($category_id) {
+    global $conn;
+    $stmt = $conn->prepare("DELETE FROM category WHERE category_id = ?");
+    $stmt->bind_param("i", $category_id);
+    $stmt->execute();
+    $stmt->close();
+}
+function createCategory($name, $description) {
+    global $conn;
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("INSERT INTO category (name, description) VALUES (?, ?)");
+    $stmt->bind_param("ss", $name, $description);
+    // Execute the statement
+    if (!$stmt->execute()) {
+        die('Execute failed: ' . htmlspecialchars($stmt->error));
+    }
+    $stmt->close();
+}
 
 // Update Post
 function updatePost($post_id, $title, $caption, $content, $category, $tags, $file = null) {
