@@ -2,19 +2,19 @@
 require_once '../auth.php';
 include '../crud_operation.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_user'])) {
-    $user_id = $_POST['user_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_category'])) {
+    $category_id = $_POST['category_id'];
 
     try {
-        deleteUser($user_id);
-        echo "<p>User  deleted successfully.</p>";
+        deleteCategory($category_id);
+        echo "<p>Category  deleted successfully.</p>";
     } catch (Exception $e) {
         echo "<p>Error: " . $e->getMessage() . "</p>";
     }
 }
 
 // Fetch the list of posts and users
-$users = listUsers();
+$categorises = listCategories();
 $totalItems = getUserCount();
 
 ?>
@@ -96,7 +96,7 @@ $totalItems = getUserCount();
                                 <ul class="nav collapse parent show" data-bs-parent="#navbarVerticalCollapse"
                                     id="nv-home">
 
-                                    <li class="nav-item"><a class="nav-link active" href="index.php">
+                                    <li class="nav-item"><a class="nav-link" href="index.php">
                                             <div class="d-flex align-items-center"><span class="nav-link-text">User
                                             </div>
                                         </a>
@@ -111,10 +111,10 @@ $totalItems = getUserCount();
                                                         class="nav-link-text">Blog Post</span></div>
                                         </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="../category.php">
-                                      <div class="d-flex align-items-center"><span class="nav-link-text">Category</span></div>
+                                    <li class="nav-item"><a class="nav-link active" href="../category.php">
+                                       <div class="d-flex align-items-center"><span class="nav-link-text">Category</span></div>
                                           </a>
-                                        </li>
+                                     </li>
 
                                 </ul>
                             </div>
@@ -8390,7 +8390,7 @@ $totalItems = getUserCount();
     <div class="content">
         <div class="row gy-3 mb-6 justify-content-between">
             <div class="col-md-9 col-auto">
-                <h2 class="mb-2 text-body-emphasis">User(<?php echo $totalItems; ?>)</h2>
+                <h2 class="mb-2 text-body-emphasis">Category(<?php echo $totalItems; ?>)</h2>
             </div>
 
 
@@ -8403,7 +8403,7 @@ $totalItems = getUserCount();
 
             <div class="col-md col-auto" style="text-align: right;">
                 <a type="button" href="new/index.php" style="color: #fff;background-color: rgb(231, 54, 103)"
-                   class="btn btn-primary">Add User</a>
+                   class="btn btn-primary">Add Category</a>
 
             </div>
 
@@ -8417,38 +8417,35 @@ $totalItems = getUserCount();
                     <tr>
                         <th class="sort ps-3 pe-1 align-middle white-space-nowrap" data-sort="orderId" style="min-width: 4.5rem;">S/N</th>
                         <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Name</th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Email</th>
-                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Phone</th>
+                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="customer" style="min-width: 8.5rem">Description</th>
                         <th class="sort pe-1 align-middle white-space-nowrap pe-7" data-sort="date">Date</th>
                         <th class="no-sort"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php if (empty($users)): ?>
+                    <?php if (empty($categorises)): ?>
                         <tr>
                             <td colspan="6" class="text-center py-2">No data available.</td>
                         </tr>
                     <?php else: ?>
-                        <?php foreach ($users as $user): ?>
+                        <?php foreach ($categorises as $category): ?>
                             <tr class="btn-reveal-trigger">
                                 <td class="order py-2 ps-3 align-middle white-space-nowrap">
                                     <a class="fw-semibold" href="#">
-                                        <?php echo $user['user_id']; ?>
+                                        <?php echo $category['category_id']; ?>
                                     </a>
                                 </td>
                                 <td class="py-2 align-middle fw-bold">
                                     <a class="fw-semibold text-body" href="#!">
-                                        <?php echo $user['username']; ?>
+                                        <?php echo $category['name']; ?>
                                     </a>
                                 </td>
-                                <td class="py-2 align-middle">
-                                    <?php echo $user['email']; ?>
+                            
+                                <td class="py-2 align-middle white-space-nowrap">
+                                    <?php echo $category['description']; ?>
                                 </td>
                                 <td class="py-2 align-middle white-space-nowrap">
-                                    <?php echo $user['phone']; ?>
-                                </td>
-                                <td class="py-2 align-middle white-space-nowrap">
-                                    <p class="mb-0"><?php echo $user['created_at']; ?></p>
+                                    <p class="mb-0"><?php echo $category['created_at']; ?></p>
                                 </td>
                                 <td class="py-2 align-middle white-space-nowrap text-end">
                                     <div class="dropstart position-static d-inline-block">
@@ -8459,10 +8456,10 @@ $totalItems = getUserCount();
                                             <!-- <span class="fas fa-ellipsis-h fs-9"></span> Font Awesome fontawesome.com -->
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="order-dropdown-2">
-                                            <form id="delete-form-<?php echo $user['user_id']; ?>" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" style="display:inline;">
-                                                <input type="hidden" name="delete_user" value="1">
-                                                <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
-                                                <button type="button" class="dropdown-item" onclick="confirmDelete(<?php echo $user['user_id']; ?>)">Delete</button>
+                                            <form id="delete-form-<?php echo $category['category_id']; ?>" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" style="display:inline;">
+                                                <input type="hidden" name="delete_category" value="1">
+                                                <input type="hidden" name="category_id" value="<?php echo $category['category_id']; ?>">
+                                                <button type="button" class="dropdown-item" onclick="confirmDelete(<?php echo $category['category_id']; ?>)">Delete</button>
                                             </form>
                                         </div>
                                     </div>

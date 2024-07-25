@@ -1,33 +1,18 @@
-<?php
-require_once '../../auth.php';
-// Include the CRUD operations script
+
+<?php 
+
 include '../../crud_operation.php';
-$post = null;
-if (isset($_GET['post_id'])) {
-    $post_id = $_GET['post_id'];
-    $post = getPostById($post_id);
+// Handle deletion of a blog post
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) {
+  $post_id = $_POST['post_id'];
+
+  try {
+      deletePost($post_id);
+      echo "Blog post deleted successfully.";
+  } catch (Exception $e) {
+      echo "Error: " . $e->getMessage();
+  }
 }
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_blog_post'])) {
-    $post_id = $_POST['post_id'];
-    $title = $_POST['title'];
-    $caption = $_POST['caption'];
-    $content = $_POST['content'];
-    $category = $_POST['category'];
-    $tags = $_POST['tags'];
-    $file = isset($_FILES['file_attachement']) ? $_FILES['file_attachement'] : null;
-
-    try {
-        updatePost($post_id, $title, $caption, $content, $category, $tags, $file);
-        header('Location: ../'); // Redirect to the manage_blog.php page
-        exit();
-    } catch (Exception $e) {
-        echo "<p>Error: " . $e->getMessage() . "</p>";
-    }
-}
-$categories = ['Politics', 'Sports', 'Culture', 'Tech', 'Health', 'Entertainment'];
-$captions = ['Popular', 'Trending', 'Latest'];
-
 ?>
 
 <!DOCTYPE html>
@@ -86,16 +71,9 @@ $captions = ['Popular', 'Trending', 'Latest'];
       }
     </script>
     <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+    <script src="vendors/dropzone/dropzone-min.js"></script>
 
-    <style>
-        .tag-button {
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .tag-button:hover {
-            background-color: rgb(231, 54, 103);
-            color: white;
-        }
-    </style>
+    <link href="vendors/dropzone/dropzone.css" rel="stylesheet" />
 
   </head>
 
@@ -114,22 +92,23 @@ $captions = ['Popular', 'Trending', 'Latest'];
                 <div class="nav-item-wrapper">
                   <div class="parent-wrapper label-1">
                     <ul class="nav collapse parent show" data-bs-parent="#navbarVerticalCollapse" id="nv-home">
-                    <li class="nav-item"><a class="nav-link" href="../../users/index.php">
+                    <li class="nav-item"><a class="nav-link" href="..">
                           <div class="d-flex align-items-center"><span class="nav-link-text">User</div>
                         </a>
                       </li>
-                      <!-- <li class="nav-item"><a class="nav-link" href="../new/index.php">
+                      <!-- <li class="nav-item"><a class="nav-link active" href="../../add-new-blog">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Add New</span></div>
                         </a>
                       </li> -->
-                      <li class="nav-item"><a class="nav-link" href="../index.php">
+                      <li class="nav-item"><a class="nav-link" href="../../blogs">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../category.php">
+                      <li class="nav-item"><a class="nav-link active" href="../category.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Category</span></div>
                         </a>
                       </li>
+                      
                     </ul>
                   </div>
                 </div>
@@ -154,8 +133,9 @@ $captions = ['Popular', 'Trending', 'Latest'];
           </div>
           <div class="search-box navbar-top-search-box d-none d-lg-block" data-list='{"valueNames":["title"]}' style="width:25rem;">
             <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
-              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" type="search" placeholder="Search..." aria-label="Search">
+              <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" id="user_id" name="user_id" required type="search" placeholder="Search..." aria-label="Search">
               <span class="fas fa-search search-box-icon"></span>
+
             </form>
             <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search"><button class="btn btn-link p-0" aria-label="Close"></button></div>
             <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
@@ -470,7 +450,7 @@ $captions = ['Popular', 'Trending', 'Latest'];
                   </div>
                   <div class="card-footer p-0 border-top border-translucent">
                     <ul class="nav d-flex flex-column my-3">
-                      <li class="nav-item"><a class="nav-link px-3 d-block" href="#!"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
+                      <li class="nav-item"><a class="nav-link px-3 d-block" href="../add-new-blog/add_user.php"> <span class="me-2 text-body align-bottom" data-feather="user-plus"></span>Add another account</a></li>
                     </ul>
                     <hr>
                     <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="../../logout.php"> <span class="me-2" data-feather="log-out"> </span>Sign out</a></div>
@@ -4954,234 +4934,58 @@ $captions = ['Popular', 'Trending', 'Latest'];
       
 
       <div class="content">
-        <div class="row gy-3 mb-6 justify-content-between">
-          <div class="col-md-9 col-auto">
-            <h2 class="mb-2 text-body-emphasis">Edit New Blog</h2>
-          </div>
-          
+    <div class="row gy-3 mb-6 justify-content-between">
+        <div class="col-md-9 col-auto">
+            <h2 class="mb-2 text-body-emphasis">Add New Category</h2>
+            <?php
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // Collect form data
+                $name = $_POST['name'];
+                $description = $_POST['description'];
+
+                try {
+                  createCategory($name, $description,);
+                    echo '<div class="alert alert-success alert-sm" role="alert">Category created successfully.</div>';
+                } catch (Exception $e) {
+                    echo '<div class="alert alert-danger" role="alert">Error: ' . $e->getMessage() . '</div>';
+                }
+            }
+            ?>
         </div>
-        
-        <form class="row g-3" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="update_blog_post" value="1">
-            <input type="hidden" name="user_id" value="1">
-            <input type="hidden" name="post_id" value="<?php echo $post['post_id']; ?>">
-            <div class="col-md-10">
-              <label class="form-label" for="title">Title</label>
-              <input class="form-control" style="height: 50px;" value="<?php echo $post['title']; ?>" id="title" name="title" type="title" required placeholder="Enter your title">
+
+        <form class="row g-3" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+            <div class="col-md-6 col-lg-6">
+                <label class="form-label" for="name">Name</label>
+                <input class="form-control" name="name" id="name" type="text" style="height: 50px;" required placeholder="Enter your Name">
             </div>
-            <div class="col-md-5">
-                <label class="form-label" for="inputState">Category</label>
-                <select class="form-select" style="height: 50px;" id="category" name="category" required>
-                    <option>Choose...</option>
-                    <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo htmlspecialchars($category); ?>" <?php echo ($post['category'] === $category) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($category); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-              </div>
-
-              <div class="col-sm-12 col-md-6 col-lg-5">
-                <label class="form-label" for="caption">Caption</label>
-                <select class="form-select" id="caption" name="caption" style="height: 50px;" id="inputState" required>
-                  <option selected="selected">Choose...</option>
-                    <?php foreach ($captions as $caption): ?>
-                        <option value="<?php echo htmlspecialchars($caption); ?>" <?php echo ($post['caption'] === $caption) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($caption); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-              </div>
-
-
-              <div class="col-md-10 mb-3">
-                <label class="form-label" for="tag">Tags (comma-separated)</label>
-                <input class="form-control" type="text" name="tags" id="tage" value="<?php echo $post['tags']; ?>"  style="height: 50px;" required />
-              </div>
-
-              
+            <div class="col-md-6 col-lg-6">
+                <label class="form-label" for="description">Description</label>
+                <input class="form-control" name="description" id="description" type="text" style="height: 50px;" required placeholder="Enter your description">
+            </div>
+            
            
-            <div class="col-md-10 mb-3">
-                <label class="form-label" for="file_attachement">File Attachment</label>
-                <input class="form-control"  style="height: 50px;" type="file" id="file_attachement" name="file_attachement"/>
-              </div>
-
-            <div class="col-md-10" >
-                <label class="form-label" for="content">Content</label>
-                <textarea id="content" name="content"><?php echo htmlspecialchars($post['content']); ?></textarea>
+            <div class="col-12 d-flex justify-content-center">
+                <input class="btn btn-primary" style="width: 100%; max-width: 150px; height: 50px; background-color: rgb(231, 54, 103);" type="submit" value="Add User" name="submit">
             </div>
+        </form>
 
-
-            <div class="col-10 mb-3">
-              <button class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit">Save post</button>
-            </div>
-          </form>
-       
-      
         <footer class="footer position-absolute">
-          <div class="row g-0 justify-content-between align-items-center h-100">
-            <div class="col-12 col-sm-auto text-center">
-              <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright ©
-                <span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span>
-                <br class="d-sm-none">InvestmateBlog 2024 <a class="mx-1" href="#" style="color: rgb(231, 54, 103)">. All Rights Reserved</a>
-              </p>
-
+            <div class="row g-0 justify-content-between align-items-center h-100">
+                <div class="col-12 col-sm-auto text-center">
+                    <p class="mb-0 mt-2 mt-sm-0 text-body">Copyright ©
+                        <span class="d-none d-sm-inline-block"></span><span class="d-none d-sm-inline-block mx-1">|</span>
+                        <br class="d-sm-none">InvestmateBlog 2024 <a class="mx-1" href="" style="color: rgb(231, 54, 103)">. All Rights Reserved</a>
+                    </p>
+                </div>
             </div>
-           
-          </div>
         </footer>
-      </div>
-      <div class="modal fade" id="searchBoxModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="true" data-phoenix-modal="data-phoenix-modal" style="--phoenix-backdrop-opacity: 1;">
-        <div class="modal-dialog">
-          <div class="modal-content mt-15 rounded-pill">
-            <div class="modal-body p-0">
-              <div class="search-box navbar-top-search-box" data-list='{"valueNames":["title"]}' style="width: auto;">
-                <form class="position-relative" data-bs-toggle="search" data-bs-display="static"><input class="form-control search-input fuzzy-search rounded-pill form-control-lg" type="search" placeholder="Search..." aria-label="Search">
-                  <span class="fas fa-search search-box-icon"></span>
-                </form>
-                <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search"><button class="btn btn-link p-0" aria-label="Close"></button></div>
-                <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
-                  <div class="scrollbar-overlay" style="max-height: 30rem;">
-                    <div class="list pb-3">
-                      <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">results</span></h6>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Recently Searched </h6>
-                      <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Products</h6>
-                      <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="file-thumbnail me-2"><img class="h-100 w-100 object-fit-cover rounded-3" src="../../../assets/img/products/60x60/3-1.png" alt=""></div>
-                          <div class="flex-1">
-                            <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
-                            <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
-                          </div>
-                        </a>
-                        <a class="dropdown-item py-2 d-flex align-items-center" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="file-thumbnail me-2"><img class="img-fluid" src="../../../assets/img/products/60x60/3-1.png" alt=""></div>
-                          <div class="flex-1">
-                            <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
-                            <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">30 Sep at 12:30 PM</span></p>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Quick Links</h6>
-                      <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Support MacBook House</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-link text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Files</h6>
-                      <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-file-zipper text-body" data-fa-transform="shrink-2"></span> Library MacBook folder.rar</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-file-lines text-body" data-fa-transform="shrink-2"></span> Feature MacBook extensions.txt</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-image text-body" data-fa-transform="shrink-2"></span> MacBook Pro_13.jpg</div>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Members</h6>
-                      <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../../../pages/members.html">
-                          <div class="avatar avatar-l status-online  me-2 text-body">
-                            <img class="rounded-circle " src="../../../assets/img/team/40x40/10-1.webp" alt="">
-                          </div>
-                          <div class="flex-1">
-                            <h6 class="mb-0 text-body-highlight title">Carry Anna</h6>
-                            <p class="fs-10 mb-0 d-flex text-body-tertiary">anna@technext.it</p>
-                          </div>
-                        </a>
-                        <a class="dropdown-item py-2 d-flex align-items-center" href="../../../pages/members.html">
-                          <div class="avatar avatar-l  me-2 text-body">
-                            <img class="rounded-circle " src="../../../assets/img/team/40x40/12-1.webp" alt="">
-                          </div>
-                          <div class="flex-1">
-                            <h6 class="mb-0 text-body-highlight title">John Smith</h6>
-                            <p class="fs-10 mb-0 d-flex text-body-tertiary">smith@technext.it</p>
-                          </div>
-                        </a>
-                      </div>
-                      <hr class="my-0">
-                      <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Related Searches</h6>
-                      <div class="py-2"><a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"><span class="fa-brands fa-firefox-browser text-body" data-fa-transform="shrink-2"></span> Search in the Web MacBook</div>
-                          </div>
-                        </a>
-                        <a class="dropdown-item" href="../../../apps/e-commerce/landing/product-details.html">
-                          <div class="d-flex align-items-center">
-                            <div class="fw-normal text-body-highlight title"> <span class="fa-brands fa-chrome text-body" data-fa-transform="shrink-2"></span> Store MacBook″</div>
-                          </div>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="text-center">
-                      <p class="fallback fw-bold fs-7 d-none">No Result Found.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="support-chat-container">
-        <div class="container-fluid support-chat">
-          <div class="card bg-body-emphasis">
-            <div class="card-header d-flex flex-between-center px-4 py-3 border-bottom border-translucent">
-              <h5 class="mb-0 d-flex align-items-center gap-2">Demo widget<span class="fa-solid fa-circle text-success fs-11"></span></h5>
-              <div class="btn-reveal-trigger"><button class="btn btn-link p-0 dropdown-toggle dropdown-caret-none transition-none d-flex" type="button" id="support-chat-dropdown" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h text-body"></span></button>
-                <div class="dropdown-menu dropdown-menu-end py-2" aria-labelledby="support-chat-dropdown"><a class="dropdown-item" href="#!">Request a callback</a><a class="dropdown-item" href="#!">Search in chat</a><a class="dropdown-item" href="#!">Show history</a><a class="dropdown-item" href="#!">Report to Admin</a><a class="dropdown-item btn-support-chat" href="#!">Close Support</a></div>
-              </div>
-            </div>
-            <div class="card-body chat p-0">
-              <div class="d-flex flex-column-reverse scrollbar h-100 p-3">
-                <div class="text-end mt-6"><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
-                    <p class="mb-0 fw-semibold fs-9">I need help with something</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
-                  </a><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
-                    <p class="mb-0 fw-semibold fs-9">I can’t reorder a product I previously ordered</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
-                  </a><a class="mb-2 d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
-                    <p class="mb-0 fw-semibold fs-9">How do I place an order?</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
-                  </a><a class="false d-inline-flex align-items-center text-decoration-none text-body-emphasis bg-body-hover rounded-pill border border-primary py-2 ps-4 pe-3" href="#!">
-                    <p class="mb-0 fw-semibold fs-9">My payment method not working</p><span class="fa-solid fa-paper-plane text-primary fs-9 ms-3"></span>
-                  </a></div>
-                <div class="text-center mt-auto">
-                  <div class="avatar avatar-3xl status-online"><img class="rounded-circle border border-3 border-light-subtle" src="../../../assets/img/team/30-1.webp" alt=""></div>
-                  <h5 class="mt-2 mb-3">Eric</h5>
-                  <p class="text-center text-body-emphasis mb-0">Ask us anything – we’ll get back to you here or by email within 24 hours.</p>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer d-flex align-items-center gap-2 border-top border-translucent ps-3 pe-4 py-3">
-              <div class="d-flex align-items-center flex-1 gap-3 border border-translucent rounded-pill px-4"><input class="form-control outline-none border-0 flex-1 fs-9 px-0" type="text" placeholder="Write message"><label class="btn btn-link d-flex p-0 text-body-quaternary fs-9 border-0" for="supportChatPhotos"><span class="fa-solid fa-image"></span></label><input class="d-none" type="file" accept="image/*" id="supportChatPhotos"><label class="btn btn-link d-flex p-0 text-body-quaternary fs-9 border-0" for="supportChatAttachment"> <span class="fa-solid fa-paperclip"></span></label><input class="d-none" type="file" id="supportChatAttachment"></div><button class="btn p-0 border-0 send-btn"><span class="fa-solid fa-paper-plane fs-9"></span></button>
-            </div>
-          </div>
-      </div>
+    </div>
+</div>
+
+
+
+
+
     </main><!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
@@ -5207,6 +5011,7 @@ $captions = ['Popular', 'Trending', 'Latest'];
     <script src="../../../vendors/flatpickr/flatpickr.min.js"></script>
     <script src="../../../assets/js/phoenix-1.js"></script>
     <script src="../../../assets/js/projectmanagement-dashboard.js"></script>
+    <script src="vendors/dropzone/dropzone-min.js"></script>
     <script>
       ClassicEditor
           .create(document.querySelector("#content"))

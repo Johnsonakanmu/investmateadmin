@@ -104,6 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_blog_post'])) 
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
                       </li>
+                      <li class="nav-item"><a class="nav-link" href="../category.php">
+                          <div class="d-flex align-items-center"><span class="nav-link-text">Category</span></div>
+                        </a>
+                      </li>
                       
                     </ul>
                   </div>

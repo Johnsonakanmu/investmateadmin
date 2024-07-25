@@ -128,10 +128,10 @@ $totalItem =getPostCount();
                                                         class="nav-link-text">Blog Post</span></div>
                                         </a>
                                     </li>
-                                    <!-- <li class="nav-item"><a class="nav-link" href="edit.php">
-                          <div class="d-flex align-items-center"><span class="nav-link-text">Edit</span></div>
-                        </a>
-                      </li> -->
+                                    <li class="nav-item"><a class="nav-link" href="../category.php">
+                                      <div class="d-flex align-items-center"><span class="nav-link-text">Category</span></div>
+                                        </a>
+                                      </li>
 
                                 </ul>
                             </div>
