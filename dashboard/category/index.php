@@ -111,7 +111,7 @@ $totalItems = getUserCount();
                                                         class="nav-link-text">Blog Post</span></div>
                                         </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link active" href="../category.php">
+                                    <li class="nav-item"><a class="nav-link active" href="index.php">
                                        <div class="d-flex align-items-center"><span class="nav-link-text">Category</span></div>
                                           </a>
                                      </li>

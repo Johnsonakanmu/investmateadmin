@@ -10,7 +10,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-$uploadDir ='C:/Users/JIDE/Desktop/femi/documents/';
+$uploadDir ='C:/Users/JOHNSON AKANMU/Documents/';
 // Directory for file uploads
 define('UPLOAD_DIR', $uploadDir);
 

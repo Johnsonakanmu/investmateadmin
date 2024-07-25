@@ -126,7 +126,7 @@ $captions = ['Popular', 'Trending', 'Latest'];
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../category.php">
+                      <li class="nav-item"><a class="nav-link" href="../../category/index.php">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Category</span></div>
                         </a>
                       </li>
@@ -5012,8 +5012,8 @@ $captions = ['Popular', 'Trending', 'Latest'];
             </div>
 
 
-            <div class="col-10 mb-3">
-              <button class="btn btn-primary" style="width: 15%; height: 50px; float:right; background-color: rgb(231, 54, 103);" type="submit">Save post</button>
+            <div class="col-12 mb-3  d-flex justify-content-center">
+              <button class="btn btn-primary" style="width: 15%; height: 50px; background-color: rgb(231, 54, 103);" type="submit">Save post</button>
             </div>
           </form>
        

@@ -89,7 +89,7 @@ include '../../crud_operation.php';
                           <div class="d-flex align-items-center"><span class="nav-link-text">Blog Post</span></div>
                         </a><!-- more inner pages-->
                       </li>
-                      <li class="nav-item"><a class="nav-link" href="../category.php">
+                      <li class="nav-item"><a class="nav-link" href="../../category">
                           <div class="d-flex align-items-center"><span class="nav-link-text">Category</span></div>
                         </a>
                       </li>
